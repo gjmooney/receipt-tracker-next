@@ -13,8 +13,8 @@ const Navbar: FC<NavbarProps> = ({}) => {
           <div className="relative mr-4 h-8 w-8 sm:h-6 sm:w-6">
             <Image fill alt="Logo" src="/logo.png" />
           </div>
-          <p className="hidden text-sm font-medium text-slate-700 md:block">
-            Receipt Tracker
+          <p className="hidden text-sm font-bold text-slate-700 md:block">
+            TRCKR
           </p>
         </Link>
 
