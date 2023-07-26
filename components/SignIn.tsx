@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import UserAuthForm from "./UserAuthForm";
 
 const SignIn = () => {
   return (
@@ -14,7 +15,7 @@ const SignIn = () => {
           User Agreement and Privacy Policy
         </p>
 
-        {/** TODO: sign in form */}
+        <UserAuthForm />
 
         <p className="px-8 text-center text-sm text-slate-700">
           New to <b>TRCKR</b>?{" "}
