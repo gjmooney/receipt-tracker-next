@@ -1,3 +1,4 @@
+import { auth, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
@@ -6,6 +7,9 @@ import { buttonVariants } from "./ui/button";
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = ({}) => {
+  const user = auth();
+  console.log("user", user);
+
   return (
     <div className="fixed inset-x-0 top-0 z-[10] h-fit border-b border-slate-100 bg-slate-300 py-2">
       <div className="container mx-auto flex max-w-7xl items-center justify-between gap-2">
@@ -20,9 +24,13 @@ const Navbar: FC<NavbarProps> = ({}) => {
 
         {/** TODO: Search bar */}
 
-        <Link href="/sign-in" className={buttonVariants()}>
-          Sign In
-        </Link>
+        {user.userId ? (
+          <UserButton afterSignOutUrl="/" />
+        ) : (
+          <Link href="/sign-in" className={buttonVariants()}>
+            Sign In
+          </Link>
+        )}
       </div>
     </div>
   );
