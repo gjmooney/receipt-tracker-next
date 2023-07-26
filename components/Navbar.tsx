@@ -7,8 +7,7 @@ import { buttonVariants } from "./ui/button";
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = ({}) => {
-  const user = auth();
-  console.log("user", user);
+  const { userId } = auth();
 
   return (
     <div className="fixed inset-x-0 top-0 z-[10] h-fit border-b border-slate-100 bg-slate-300 py-2">
@@ -24,7 +23,7 @@ const Navbar: FC<NavbarProps> = ({}) => {
 
         {/** TODO: Search bar */}
 
-        {user.userId ? (
+        {userId ? (
           <UserButton afterSignOutUrl="/" />
         ) : (
           <Link href="/sign-in" className={buttonVariants()}>
