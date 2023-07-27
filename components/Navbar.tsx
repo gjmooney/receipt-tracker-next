@@ -1,8 +1,8 @@
-import { auth, UserButton } from "@clerk/nextjs";
+import { UserButton, auth, SignInButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
-import { buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 
 interface NavbarProps {}
 
@@ -26,9 +26,9 @@ const Navbar: FC<NavbarProps> = ({}) => {
         {userId ? (
           <UserButton afterSignOutUrl="/" />
         ) : (
-          <Link href="/sign-in" className={buttonVariants()}>
-            Sign In
-          </Link>
+          <SignInButton mode="modal">
+            <button className={buttonVariants()}>Sign In</button>
+          </SignInButton>
         )}
       </div>
     </div>
