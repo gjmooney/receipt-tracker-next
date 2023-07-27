@@ -1,9 +1,10 @@
+import AddItemForm from "@/components/AddItemForm";
 import { FC } from "react";
 
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
-  return <div>page</div>;
+  return <AddItemForm />;
 };
 
 export default page;
