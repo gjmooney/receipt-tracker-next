@@ -1,11 +1,74 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+enum ProductType {
+  WEIGHT
+  BUNCH
+  PIECE
+}
+
+enum WeightType {
+  G
+  KG
+  ML
+  CL
+  L
+}
+
+model User {
+  id            String    @id @default(uuid())
+  userId        String //Id from clerk
+  submissions   Product[] @relation("SubmittedBy")
+  contributions Product[] @relation("Contributers")
+}
+
+model Product {
+  id             String      @id @default(uuid())
+  type           String      @unique
+  subtype        String?
+  microtype      String?
+  price          Int
+  timesPurchased Int         @default(0)
+  datePurchased  DateTime
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  onSale         Boolean
+  quantityType   ProductType
+  weightUnit     WeightType?
+  quantityValue  Int
+  fromStore      Store       @relation(fields: [storeId], references: [id])
+  storeId        String
+  brand          String?
+  description    String?
+  category       String?
+  receipt        String?
+  upc            Int?
+  submittedBy    User        @relation("SubmittedBy", fields: [userId], references: [id])
+  userId         String
+  contributers   User[]      @relation("Contributers")
+
+  @@index([storeId])
+  @@index([userId])
+}
+
+model Receipt {
+  id    String @id @default(uuid())
+  image String @unique
+}
+
+model Store {
+  id        String    @id @default(uuid())
+  name      String
+  address   Json
+  addressId String    @unique
+  Product   Product[]
+
+  @@index([addressId])
 }
