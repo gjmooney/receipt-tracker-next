@@ -3,14 +3,20 @@
 import { cn } from "@/lib/utils";
 import { AddItemRequest, AddItemValidator } from "@/lib/validators/addItem";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectContent } from "@radix-ui/react-select";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import { Checkbox } from "./ui/checkbox";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "./ui/command";
 import {
   Form,
   FormControl,
@@ -22,7 +28,13 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Select, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface AddItemFormProps {}
 
@@ -30,6 +42,13 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
   const productType = ["WEIGHT", "BUNCH", "PIECE"];
 
   const weightUnit = ["G", "KG", "ML", "CL", "L"];
+
+  //TODO these are just for figuring it out
+  const stores = [
+    { label: "Monoprix", value: "monoprix" },
+    { label: "Leader Cash", value: "leader cash" },
+    { label: "Carrefour", value: "carrefour" },
+  ];
 
   const form = useForm<AddItemRequest>({
     resolver: zodResolver(AddItemValidator),
@@ -128,7 +147,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="price"
           render={({ field }) => (
-            <FormItem className="col-span-3">
+            <FormItem className="col-span-4">
               <FormLabel>Price</FormLabel>
               <FormControl>
                 <Input placeholder="How much??" {...field} />
@@ -142,7 +161,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="onSale"
           render={({ field }) => (
-            <FormItem className="col-span-3">
+            <FormItem className="col-span-4">
               <FormLabel>Sale?</FormLabel>
               <FormControl className="ml-7 ">
                 <Checkbox
@@ -159,7 +178,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="datePurchased"
           render={({ field }) => (
-            <FormItem className="col-span-3">
+            <FormItem className="col-span-4">
               <FormLabel>Purchase Date</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -202,7 +221,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="quantityValue"
           render={({ field }) => (
-            <FormItem className="col-span-3">
+            <FormItem className="col-span-4">
               <FormLabel>How many?</FormLabel>
               <FormControl>
                 <Input placeholder="How many did you get?" {...field} />
@@ -216,7 +235,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="weightUnit"
           render={({ field }) => (
-            <FormItem className="col-span-3">
+            <FormItem className="col-span-4">
               <FormLabel>Weight</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
@@ -241,7 +260,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="quantityType"
           render={({ field }) => (
-            <FormItem className="col-span-3">
+            <FormItem className="col-span-4">
               <FormLabel>Size Type</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
@@ -249,7 +268,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
                     <SelectValue placeholder="Enter the quantity category" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
+                <SelectContent className="border">
                   {productType.map((unit) => (
                     <SelectItem key={unit} value={unit}>
                       {unit}
@@ -262,6 +281,66 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
             </FormItem>
           )}
         />
+        <div className="col-span-full"></div>
+        <FormField
+          control={form.control}
+          name="fromStore"
+          render={({ field }) => (
+            <FormItem className="col-span-4 flex flex-col">
+              <FormLabel>Store</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground",
+                      )}
+                    >
+                      {field.value
+                        ? stores.find((store) => store.value === field.value)
+                            ?.label
+                        : "Select store"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search store..." />
+                    <CommandEmpty>No store found.</CommandEmpty>
+                    <CommandGroup>
+                      {stores.map((store) => (
+                        <CommandItem
+                          value={store.value}
+                          key={store.value}
+                          onSelect={(value) => {
+                            form.setValue("fromStore", value);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              store.value === field.value
+                                ? "opacity-100"
+                                : "opacity-0",
+                            )}
+                          />
+                          {store.label}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription>The store you bought from</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="col-span-full"></div>
 
         <Button type="submit" className="">
           Submit
