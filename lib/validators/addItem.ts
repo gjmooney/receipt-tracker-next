@@ -10,13 +10,13 @@ export const AddItemValidator = z.object({
   upc: z.number().optional(),
 
   // fields for Purchase
-  price: z.number().positive(),
+  price: z.coerce.number().positive(),
   datePurchased: z.date(),
   onSale: z.boolean(),
   brand: z.string().optional(),
   quantityType: z.enum(["WEIGHT", "BUNCH", "PIECE"]),
   weightUnit: z.enum(["G", "KG", "ML", "CL", "L"]).optional(),
-  quantityValue: z.number().positive(),
+  quantityValue: z.coerce.number().positive(),
   fromStore: z.string(),
 });
 
