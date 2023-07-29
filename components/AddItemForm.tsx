@@ -43,6 +43,12 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
 
   const weightUnit = ["G", "KG", "ML", "CL", "L"];
 
+  function toTitleCase(str: string) {
+    return str.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+    });
+  }
+
   //TODO these are just for figuring it out
   const stores = [
     { label: "Monoprix", value: "monoprix" },
@@ -299,17 +305,17 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
                         !field.value && "text-muted-foreground",
                       )}
                     >
-                      {field.value
-                        ? stores.find((store) => store.value === field.value)
-                            ?.label
-                        : "Select store"}
+                      {field.value ? toTitleCase(field.value) : "Select store"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
-                    <CommandInput placeholder="Search store..." />
+                    <CommandInput
+                      onValueChange={(v) => form.setValue("fromStore", v)}
+                      placeholder="Search store..."
+                    />
                     <CommandEmpty>No store found.</CommandEmpty>
                     <CommandGroup>
                       {stores.map((store) => (
