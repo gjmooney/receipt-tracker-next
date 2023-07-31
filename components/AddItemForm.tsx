@@ -3,6 +3,8 @@
 import { cn } from "@/lib/utils";
 import { AddItemRequest, AddItemValidator } from "@/lib/validators/addItem";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { FC } from "react";
@@ -29,10 +31,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { toast } from "@/hooks/use-toast";
 
 interface AddItemFormProps {}
 
 const AddItemForm: FC<AddItemFormProps> = ({}) => {
+  
   const productType = [
     { label: "Weight", value: "WEIGHT" },
     { label: "Bunch", value: "BUNCH" },
@@ -105,6 +109,30 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     },
   });
 
+  const {mutate: submitForm, isLoading} = useMutation({
+    mutationFn: async (fields: AddItemRequest)  => {
+      const payload: AddItemRequest = fields;
+
+      //const {data} = await axios.post(`/api/add-item`, payload)
+
+      console.log('payload', payload)
+
+     // return data
+    },
+    onError: (error) => {
+      //TODO use error codes for better handling
+      console.log('error', error)
+      toast({
+        description: 'Something went wrong',
+        variant: "destructive"
+      })
+    }, onSuccess: () => {
+      toast({
+        description: 'Your item has been added!'
+      });
+    }
+  })
+
   // TODO: change this to use mutation stuff
   const onSubmit = (values: AddItemRequest) => {
     try {
@@ -117,7 +145,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit((e) => {submitForm(e)})}
         className="grid w-full grid-cols-12 gap-2 rounded-lg border p-4 px-3 md:px-6"
       >
         <FormField
