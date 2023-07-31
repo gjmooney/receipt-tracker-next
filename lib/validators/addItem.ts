@@ -10,6 +10,7 @@ export const AddItemValidator = z.object({
   upc: z.number().optional(),
 
   // fields for Purchase
+  //TODO: validate currency
   price: z.coerce.number().positive(),
   datePurchased: z.date(),
   onSale: z.boolean(),

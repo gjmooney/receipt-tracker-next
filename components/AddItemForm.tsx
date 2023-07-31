@@ -33,14 +33,24 @@ import {
 interface AddItemFormProps {}
 
 const AddItemForm: FC<AddItemFormProps> = ({}) => {
-  const productType = ["WEIGHT", "BUNCH", "PIECE"];
+  const productType = [
+    { label: "Weight", value: "WEIGHT" },
+    { label: "Bunch", value: "BUNCH" },
+    { label: "Piece", value: "PIECE" },
+  ];
 
-  const weightUnit = ["G", "KG", "ML", "CL", "L"];
+  const weightUnit = [
+    { label: "g", value: "G" },
+    { label: "Kg", value: "KG" },
+    { label: "Ml", value: "ML" },
+    { label: "Cl", value: "CL" },
+    { label: "l", value: "L" },
+  ];
 
   //TODO: all current array values will come from db
-  //TODO these are just for figuring it out
+  // these are just for figuring it out
   const types = [
-    { label: "Hummus", value: "hummms" },
+    { label: "Hummus", value: "hummus" },
     { label: "Milk", value: "milk" },
     { label: "Cashews", value: "cashews" },
   ];
@@ -57,14 +67,20 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
 
   const stores = [
     { label: "Monoprix", value: "monoprix" },
-    { label: "Leader Cash", value: "leader cash" },
+    { label: "Leader Cash", value: "leader_cash" },
     { label: "Carrefour", value: "carrefour" },
   ];
 
   const brands = [
-    { label: "Leader Price", value: "leader price" },
+    { label: "Leader Price", value: "leader_price" },
     { label: "Eden", value: "eden" },
     { label: "Monoprix", value: "monoprix" },
+  ];
+
+  const category = [
+    { label: "(Not) Dairy", value: "(not)dairy)" },
+    { label: "Fake Meat", value: "fake_meat" },
+    { label: "Produce", value: "produce" },
   ];
 
   const form = useForm<AddItemRequest>({
@@ -98,14 +114,11 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     }
   };
 
-  const onValueChange = (name: keyof AddItemRequest, v: string) =>
-    form.setValue(name, v);
-
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid w-full grid-cols-12 gap-2 rounded-lg border p-4 px-3  md:px-6"
+        className="grid w-full grid-cols-12 gap-2 rounded-lg border p-4 px-3 md:px-6"
       >
         <FormField
           control={form.control}
@@ -115,7 +128,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               className="col-span-full"
               name={field.name}
               value={field.value}
-              label="Type"
+              label="The thing you bought"
               data={types}
               description="Hummus, Milk, etc...? "
             />
@@ -132,7 +145,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               value={field.value}
               label="Subtype"
               data={subTypes}
-              description="Oat, Soy, etc...? "
+              description="Oat, Soy, etc...? (Optional)"
             />
           )}
         />
@@ -147,7 +160,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               value={field.value}
               label="Microtype"
               data={microTypes}
-              description="Vanilla, Chocolate, etc...? "
+              description="Vanilla, Chocolate, etc...? (Optional)"
             />
           )}
         />
@@ -161,11 +174,15 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               <FormControl>
                 <Input placeholder="Describe what you get?" {...field} />
               </FormControl>
-              <FormDescription>Wax poetic about your hummus</FormDescription>
+              <FormDescription>
+                Wax poetic about your hummus (Optional)
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        {/**TODO: add little currency sign in box */}
         <FormField
           control={form.control}
           name="price"
@@ -175,11 +192,12 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               <FormControl>
                 <Input placeholder="How much??" {...field} />
               </FormControl>
-
+              <FormDescription>What it cost?</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="onSale"
@@ -192,11 +210,12 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
-              <FormDescription>You get a good deal?</FormDescription>
+              <FormDescription>You get a good deal? (Optional)</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="datePurchased"
@@ -239,7 +258,9 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
             </FormItem>
           )}
         />
+
         <div className="col-span-full"></div>
+
         <FormField
           control={form.control}
           name="quantityValue"
@@ -249,11 +270,12 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               <FormControl>
                 <Input placeholder="How many did you get?" {...field} />
               </FormControl>
-
+              <FormDescription>How much ya get?</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="weightUnit"
@@ -268,17 +290,18 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
                 </FormControl>
                 <SelectContent>
                   {weightUnit.map((unit) => (
-                    <SelectItem key={unit} value={unit}>
-                      {unit}
+                    <SelectItem key={unit.value} value={unit.value}>
+                      {unit.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <FormDescription>Choose your measure</FormDescription>
+              <FormDescription>Choose your measure (Optional)</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="quantityType"
@@ -293,8 +316,8 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
                 </FormControl>
                 <SelectContent className="border">
                   {productType.map((unit) => (
-                    <SelectItem key={unit} value={unit}>
-                      {unit}
+                    <SelectItem key={unit.value} value={unit.value}>
+                      {unit.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -304,6 +327,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
             </FormItem>
           )}
         />
+
         <div className="col-span-full"></div>
 
         <FormField
@@ -329,10 +353,42 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               name={field.name}
               value={field.value}
               label="Brand"
-              description="Select the brand"
+              description="Select the brand (Optional)"
               data={brands}
               className="col-span-4"
             />
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <AddItemFormField
+              name={field.name}
+              value={field.value}
+              label="Category"
+              description="Select the category (Optional)"
+              data={category}
+              className="col-span-4"
+            />
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="upc"
+          render={({ field }) => (
+            <FormItem className="col-span-full ">
+              <FormLabel>UPC Number</FormLabel>
+              <FormControl>
+                <Input placeholder="UPC number?" {...field} />
+              </FormControl>
+              <FormDescription>
+                13 digit number from the barcode (Optional)
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
           )}
         />
 
