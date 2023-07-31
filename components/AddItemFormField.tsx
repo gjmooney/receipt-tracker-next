@@ -48,7 +48,7 @@ const FormFTEst: FC<FormFTEstProps> = ({
     });
   }
 
-  const onSetValue = (v: string) => setValue(name, v);
+  const onSetValue = (value: string) => setValue(name, value);
 
   return (
     <FormItem className={className}>
@@ -79,7 +79,7 @@ const FormFTEst: FC<FormFTEstProps> = ({
             <CommandGroup>
               {data.map((item) => (
                 <CommandItem
-                  value={item.value}
+                  value={item.label}
                   key={item.value}
                   onSelect={(value) => {
                     onSetValue(value);
