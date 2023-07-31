@@ -29,6 +29,7 @@ interface FormFTEstProps {
     label: string;
     value: string;
   }[];
+  className: string;
 }
 
 const FormFTEst: FC<FormFTEstProps> = ({
@@ -37,6 +38,7 @@ const FormFTEst: FC<FormFTEstProps> = ({
   value,
   description,
   data,
+  className,
 }) => {
   const { setValue } = useFormContext<AddItemRequest>();
 
@@ -49,7 +51,7 @@ const FormFTEst: FC<FormFTEstProps> = ({
   const onSetValue = (v: string) => setValue(name, v);
 
   return (
-    <FormItem className="col-span-4 flex flex-col">
+    <FormItem className={cn("flex flex-col", className)}>
       <FormLabel>{label}</FormLabel>
       <Popover>
         <PopoverTrigger asChild>

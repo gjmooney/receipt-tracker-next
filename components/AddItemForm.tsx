@@ -127,6 +127,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           name="subtype"
           render={({ field }) => (
             <AddItemFormField
+              className="col-span-6"
               name={field.name}
               value={field.value}
               label="Subtype"
@@ -313,6 +314,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               label="Store"
               description="Store you bought from"
               data={stores}
+              className="col-span-4"
             />
           )}
         />
@@ -327,6 +329,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               label="Brand"
               description="Select the brand"
               data={brands}
+              className="col-span-4"
             />
           )}
         />
