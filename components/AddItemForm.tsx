@@ -4,19 +4,13 @@ import { cn } from "@/lib/utils";
 import { AddItemRequest, AddItemValidator } from "@/lib/validators/addItem";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
+import AddItemFormField from "./AddItemFormField";
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import { Checkbox } from "./ui/checkbox";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "./ui/command";
 import {
   Form,
   FormControl,
@@ -43,17 +37,34 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
 
   const weightUnit = ["G", "KG", "ML", "CL", "L"];
 
-  function toTitleCase(str: string) {
-    return str.replace(/\w\S*/g, function (txt) {
-      return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
-    });
-  }
-
+  //TODO: all current array values will come from db
   //TODO these are just for figuring it out
+  const types = [
+    { label: "Hummus", value: "hummms" },
+    { label: "Milk", value: "milk" },
+    { label: "Cashews", value: "cashews" },
+  ];
+
+  const subTypes = [
+    { label: "Oat", value: "oat" },
+    { label: "Soy", value: "soy" },
+  ];
+
+  const microTypes = [
+    { label: "Chocolate", value: "chocolate" },
+    { label: "Vanilla", value: "vanilla" },
+  ];
+
   const stores = [
     { label: "Monoprix", value: "monoprix" },
     { label: "Leader Cash", value: "leader cash" },
     { label: "Carrefour", value: "carrefour" },
+  ];
+
+  const brands = [
+    { label: "Leader Price", value: "leader price" },
+    { label: "Eden", value: "eden" },
+    { label: "Monoprix", value: "monoprix" },
   ];
 
   const form = useForm<AddItemRequest>({
@@ -87,6 +98,9 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     }
   };
 
+  const onValueChange = (name: keyof AddItemRequest, v: string) =>
+    form.setValue(name, v);
+
   return (
     <Form {...form}>
       <form
@@ -107,18 +121,18 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="subtype"
           render={({ field }) => (
-            <FormItem className="col-span-6">
-              <FormLabel>Subtype</FormLabel>
-              <FormControl>
-                <Input placeholder="Sub what you get?" {...field} />
-              </FormControl>
-              <FormDescription>Soy, Oat, etc...</FormDescription>
-              <FormMessage />
-            </FormItem>
+            <AddItemFormField
+              name={field.name}
+              value={field.value}
+              label="Subtype"
+              data={subTypes}
+              description="Sub what you get? "
+            />
           )}
         />
         <FormField
@@ -288,64 +302,35 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           )}
         />
         <div className="col-span-full"></div>
+
         <FormField
           control={form.control}
           name="fromStore"
           render={({ field }) => (
-            <FormItem className="col-span-4 flex flex-col">
-              <FormLabel>Store</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        "w-[200px] justify-between",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      {field.value ? toTitleCase(field.value) : "Select store"}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                  <Command>
-                    <CommandInput
-                      onValueChange={(v) => form.setValue("fromStore", v)}
-                      placeholder="Search store..."
-                    />
-                    <CommandEmpty>No store found.</CommandEmpty>
-                    <CommandGroup>
-                      {stores.map((store) => (
-                        <CommandItem
-                          value={store.value}
-                          key={store.value}
-                          onSelect={(value) => {
-                            form.setValue("fromStore", value);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              store.value === field.value
-                                ? "opacity-100"
-                                : "opacity-0",
-                            )}
-                          />
-                          {store.label}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              <FormDescription>The store you bought from</FormDescription>
-              <FormMessage />
-            </FormItem>
+            <AddItemFormField
+              name={field.name}
+              value={field.value}
+              label="Store"
+              description="Store you bought from"
+              data={stores}
+            />
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="brand"
+          render={({ field }) => (
+            <AddItemFormField
+              name={field.name}
+              value={field.value}
+              label="Brand"
+              description="Select the brand"
+              data={brands}
+            />
+          )}
+        />
+
         <div className="col-span-full"></div>
 
         <Button type="submit" className="">

@@ -1,0 +1,105 @@
+import { cn } from "@/lib/utils";
+import { AddItemRequest } from "@/lib/validators/addItem";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { FC } from "react";
+import { useFormContext } from "react-hook-form";
+import { Button } from "./ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "./ui/command";
+import {
+  FormControl,
+  FormDescription,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+
+interface FormFTEstProps {
+  name: keyof AddItemRequest;
+  label: string;
+  value?: string;
+  description?: string;
+  data: {
+    label: string;
+    value: string;
+  }[];
+}
+
+const FormFTEst: FC<FormFTEstProps> = ({
+  name,
+  label,
+  value,
+  description,
+  data,
+}) => {
+  const { setValue } = useFormContext<AddItemRequest>();
+
+  function toTitleCase(str: string) {
+    return str.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+    });
+  }
+
+  const onSetValue = (v: string) => setValue(name, v);
+
+  return (
+    <FormItem className="col-span-4 flex flex-col">
+      <FormLabel>{label}</FormLabel>
+      <Popover>
+        <PopoverTrigger asChild>
+          <FormControl>
+            <Button
+              variant="outline"
+              role="combobox"
+              className={cn(
+                "w-[200px] justify-between",
+                !value && "text-muted-foreground",
+              )}
+            >
+              {value ? toTitleCase(value) : `Select ${label}`}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </FormControl>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0">
+          <Command>
+            <CommandInput
+              onValueChange={(v) => onSetValue(v)}
+              placeholder={`Search ${label}...`}
+            />
+            <CommandEmpty>{label} not found.</CommandEmpty>
+            <CommandGroup>
+              {data.map((item) => (
+                <CommandItem
+                  value={item.value}
+                  key={item.value}
+                  onSelect={(value) => {
+                    onSetValue(value);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      item.value === value ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  {item.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
+      <FormDescription>{description}</FormDescription>
+      <FormMessage />
+    </FormItem>
+  );
+};
+
+export default FormFTEst;
