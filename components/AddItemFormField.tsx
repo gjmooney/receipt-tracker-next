@@ -51,16 +51,16 @@ const FormFTEst: FC<FormFTEstProps> = ({
   const onSetValue = (v: string) => setValue(name, v);
 
   return (
-    <FormItem className={cn("flex flex-col", className)}>
+    <FormItem className={className}>
       <FormLabel>{label}</FormLabel>
       <Popover>
         <PopoverTrigger asChild>
-          <FormControl>
+          <FormControl className="flex flex-col">
             <Button
               variant="outline"
               role="combobox"
               className={cn(
-                "w-[200px] justify-between",
+                "w-full flex-row justify-between",
                 !value && "text-muted-foreground",
               )}
             >

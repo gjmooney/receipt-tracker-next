@@ -111,14 +111,14 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="type"
           render={({ field }) => (
-            <FormItem className="col-span-full">
-              <FormLabel>Type</FormLabel>
-              <FormControl>
-                <Input placeholder="What you get?" {...field} />
-              </FormControl>
-              <FormDescription>Hummus, milk, etc</FormDescription>
-              <FormMessage />
-            </FormItem>
+            <AddItemFormField
+              className="col-span-full"
+              name={field.name}
+              value={field.value}
+              label="Type"
+              data={types}
+              description="Hummus, Milk, etc...? "
+            />
           )}
         />
 
@@ -132,24 +132,26 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               value={field.value}
               label="Subtype"
               data={subTypes}
-              description="Sub what you get? "
+              description="Oat, Soy, etc...? "
             />
           )}
         />
+
         <FormField
           control={form.control}
           name="microtype"
           render={({ field }) => (
-            <FormItem className="col-span-6">
-              <FormLabel>Microtype</FormLabel>
-              <FormControl>
-                <Input placeholder="Micro what you get?" {...field} />
-              </FormControl>
-              <FormDescription>Chocolate, vanilla, etc...</FormDescription>
-              <FormMessage />
-            </FormItem>
+            <AddItemFormField
+              className="col-span-6"
+              name={field.name}
+              value={field.value}
+              label="Microtype"
+              data={microTypes}
+              description="Vanilla, Chocolate, etc...? "
+            />
           )}
         />
+
         <FormField
           control={form.control}
           name="description"
