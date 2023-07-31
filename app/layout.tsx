@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Providers from "@/components/Providers";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
           <div className="container mx-auto h-full max-w-7xl pt-12">
             {children}
           </div>
+          <Toaster />
         </body>
         </Providers>
       </html>
