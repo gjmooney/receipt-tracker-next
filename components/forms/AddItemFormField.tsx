@@ -20,7 +20,7 @@ import {
 } from "../ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-interface FormFTEstProps {
+interface AddItemFormFieldProps {
   name: keyof AddItemRequest;
   label: string;
   value?: string;
@@ -32,7 +32,7 @@ interface FormFTEstProps {
   className: string;
 }
 
-const FormFTEst: FC<FormFTEstProps> = ({
+const AddItemFormField: FC<AddItemFormFieldProps> = ({
   name,
   label,
   value,
@@ -72,7 +72,7 @@ const FormFTEst: FC<FormFTEstProps> = ({
         <PopoverContent className="w-[200px] p-0">
           <Command>
             <CommandInput
-              onValueChange={(v) => onSetValue(v)}
+              onValueChange={(v) => onSetValue(v.toLowerCase())}
               placeholder={`Search ${label}...`}
             />
             <CommandEmpty>{label} not found.</CommandEmpty>
@@ -104,4 +104,4 @@ const FormFTEst: FC<FormFTEstProps> = ({
   );
 };
 
-export default FormFTEst;
+export default AddItemFormField;
