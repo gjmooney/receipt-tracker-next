@@ -46,7 +46,6 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@tanstack/eslint-plugin-query": "^4.29.25",
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.4.1"
   }

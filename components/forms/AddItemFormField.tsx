@@ -3,22 +3,22 @@ import { AddItemRequest } from "@/lib/validators/addItem";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "./ui/command";
+} from "../ui/command";
 import {
   FormControl,
   FormDescription,
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+} from "../ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 interface FormFTEstProps {
   name: keyof AddItemRequest;

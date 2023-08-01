@@ -30,15 +30,16 @@ model User {
 
 model Product {
   id             String     @id @default(uuid())
-  type           String     @unique
+  type           String
   subtype        String?
   microtype      String?
-  timesPurchased Int        @default(0)
+  timesPurchased Int?       @default(0)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   description    String?
   category       String?
-  upc            Int?
+  upc            String?
+  brand          String?
   Purchase       Purchase[]
 }
 
@@ -51,7 +52,6 @@ model Purchase {
   price         Int
   datePurchased DateTime
   onSale        Boolean
-  brand         String?
   quantityType  ProductType
   weightUnit    WeightUnit?
   quantityValue Int

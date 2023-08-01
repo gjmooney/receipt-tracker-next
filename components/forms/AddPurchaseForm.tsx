@@ -10,9 +10,9 @@ import { CalendarIcon } from "lucide-react";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import AddItemFormField from "./AddItemFormField";
-import { Button } from "./ui/button";
-import { Calendar } from "./ui/calendar";
-import { Checkbox } from "./ui/checkbox";
+import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
+import { Checkbox } from "../ui/checkbox";
 import {
   Form,
   FormControl,
@@ -21,22 +21,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "../ui/select";
 import { toast } from "@/hooks/use-toast";
 
 interface AddItemFormProps {}
 
 const AddItemForm: FC<AddItemFormProps> = ({}) => {
-  
   const productType = [
     { label: "Weight", value: "WEIGHT" },
     { label: "Bunch", value: "BUNCH" },
@@ -109,29 +108,30 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     },
   });
 
-  const {mutate: submitForm, isLoading} = useMutation({
-    mutationFn: async (fields: AddItemRequest)  => {
+  const { mutate: submitForm, isLoading } = useMutation({
+    mutationFn: async (fields: AddItemRequest) => {
       const payload: AddItemRequest = fields;
 
-      //const {data} = await axios.post(`/api/add-item`, payload)
+      const { data } = await axios.post(`/api/add-item`, payload);
 
-      console.log('payload', payload)
+      //console.log("payload", payload);
 
-     // return data
+      return data;
     },
     onError: (error) => {
       //TODO use error codes for better handling
-      console.log('error', error)
+      console.log("error", error);
       toast({
-        description: 'Something went wrong',
-        variant: "destructive"
-      })
-    }, onSuccess: () => {
-      toast({
-        description: 'Your item has been added!'
+        description: "Something went wrong",
+        variant: "destructive",
       });
-    }
-  })
+    },
+    onSuccess: () => {
+      toast({
+        description: "Your item has been added!",
+      });
+    },
+  });
 
   // TODO: change this to use mutation stuff
   const onSubmit = (values: AddItemRequest) => {
@@ -145,7 +145,9 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((e) => {submitForm(e)})}
+        onSubmit={form.handleSubmit((e) => {
+          submitForm(e);
+        })}
         className="grid w-full grid-cols-12 gap-2 rounded-lg border p-4 px-3 md:px-6"
       >
         <FormField

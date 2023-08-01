@@ -1,4 +1,4 @@
-import AddItemForm from "@/components/AddItemForm";
+import AddItemForm from "@/components/forms/AddItemForm";
 import { FC } from "react";
 
 interface pageProps {}
