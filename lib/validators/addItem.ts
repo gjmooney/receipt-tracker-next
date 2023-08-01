@@ -7,7 +7,8 @@ export const AddItemValidator = z.object({
   microtype: z.string().optional(),
   description: z.string().max(150).optional(),
   category: z.string().optional(),
-  upc: z.string().optional(),
+  isProduce: z.boolean().default(false),
+  upc: z.string(),
   brand: z.string().optional(),
 });
 

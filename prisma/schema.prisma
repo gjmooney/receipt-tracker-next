@@ -40,7 +40,10 @@ model Product {
   category       String?
   upc            String?
   brand          String?
+  isProduce      Boolean
   Purchase       Purchase[]
+
+  @@unique([type, upc])
 }
 
 model Purchase {

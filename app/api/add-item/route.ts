@@ -13,37 +13,48 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { type, subtype, microtype, description, category, upc, brand } =
-      AddItemValidator.parse(body);
+    let {
+      type,
+      subtype,
+      microtype,
+      description,
+      category,
+      upc,
+      brand,
+      isProduce,
+    } = AddItemValidator.parse(body);
 
-    // need all the fields from the submission
-    //submit the right fields to the right tables
-    //purchase will always be a new row
-    // product might just be an update to the purchase column
+    // set UPC if product is produce
+    // doing this because upc is used as part of identifier
+    if (isProduce) {
+      upc = "produce";
+    }
 
-    //so first: check if product already exists
-    //TODO: gonna use type for now
+    // return error if product is not produce
+    // and there's no UPC
+    if (!upc) {
+      return new Response("UPC is required", { status: 400 });
+    }
 
-    const productExists = await db.product.findFirst({
+    const productExists = await db.product.findUnique({
       where: {
-        upc,
+        type_upc: { type, upc },
       },
     });
 
     if (productExists) {
       return new Response("Product already exists", { status: 409 });
     } else {
-      //create product
-
       const product = await db.product.create({
         data: {
-          type: type,
-          subtype: subtype,
-          microtype: microtype,
-          description: description,
-          category: category,
-          brand: brand,
-          upc: upc,
+          type,
+          subtype,
+          microtype,
+          description,
+          category,
+          brand,
+          upc,
+          isProduce,
         },
       });
 
@@ -54,6 +65,7 @@ export async function POST(req: Request) {
       return new Response(error.message, { status: 422 });
     }
 
+    console.log("error", error);
     return new Response("is Broke", { status: 500 });
   }
 }

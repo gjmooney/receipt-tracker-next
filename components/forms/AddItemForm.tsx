@@ -5,9 +5,10 @@ import { AddItemRequest, AddItemValidator } from "@/lib/validators/addItem";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 import {
   Form,
   FormControl,
@@ -63,6 +64,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
       category: "",
       brand: "",
       upc: "",
+      isProduce: false,
     },
   });
 
@@ -76,19 +78,23 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     },
     onError: (error: any) => {
       //TODO use error codes for better handling
-      console.log("onError", error.response?.status);
       if (error instanceof AxiosError) {
-        if (error.response?.status === 409) {
+        if (error.response?.status === 400) {
+          toast({
+            description: "UPC is required",
+            variant: "destructive",
+          });
+        } else if (error.response?.status === 409) {
           toast({
             description: "Product already exists",
             variant: "destructive",
           });
-        } else {
-          toast({
-            description: "Something went wrong",
-            variant: "destructive",
-          });
         }
+      } else {
+        toast({
+          description: "Something went wrong",
+          variant: "destructive",
+        });
       }
     },
     onSuccess: () => {
@@ -200,12 +206,35 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
 
         <FormField
           control={form.control}
+          name="isProduce"
+          render={({ field }) => (
+            <FormItem className="col-span-3 flex flex-col items-start justify-between">
+              <FormLabel className="pt-1">Loose Produce?</FormLabel>
+              <FormControl className="ml-7 ">
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+
+              <FormDescription>Is this loose produce?</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="upc"
           render={({ field }) => (
-            <FormItem className="col-span-full ">
+            <FormItem className="col-span-9">
               <FormLabel>UPC Number</FormLabel>
               <FormControl>
-                <Input placeholder="UPC number?" {...field} />
+                <Input
+                  disabled={form.getValues("isProduce")}
+                  placeholder="UPC number?"
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 13 digit number from the barcode (Optional)
@@ -215,7 +244,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           )}
         />
 
-        <Button type="submit" className="">
+        <Button type="submit" className="col-span-full mt-6">
           Submit
         </Button>
       </form>
