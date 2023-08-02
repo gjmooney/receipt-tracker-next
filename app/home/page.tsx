@@ -1,10 +1,13 @@
+import ProductList from "@/components/ProductList";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { FC } from "react";
 
 interface pageProps {}
 
-const page: FC<pageProps> = ({}) => {
+const page: FC<pageProps> = async ({}) => {
+  
+
   return (
     <div className="">
       <div>
@@ -13,6 +16,7 @@ const page: FC<pageProps> = ({}) => {
         </Link>
       </div>
       <div className="">list of items</div>
+      <ProductList />
     </div>
   );
 };
