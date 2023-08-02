@@ -29,9 +29,16 @@ const ProductCard: FC<ProductCardProps> = ({ data }) => {
           description
         </div>
 
-        <div className=" flex justify-between py-6 text-sm text-muted-foreground">
-          <span>{data.category}</span>
-          <span>Purchased {data.timesPurchased} times</span>
+        <div className="flex justify-between py-6 text-sm text-muted-foreground">
+          <div className="grid grid-cols-[12px_1fr] items-start justify-center ">
+            <span className="flex h-2 w-2 translate-y-1.5 rounded-full bg-cyan-700" />
+            {data.category}
+          </div>
+
+          <div className="grid grid-cols-[12px_1fr] items-start justify-center ">
+            <span className="bg- flex h-2 w-2 translate-y-1.5 rounded-full" />
+            Purchased {data.timesPurchased} times
+          </div>
         </div>
 
         {/* <div className="">edit delete time purchased</div> */}
