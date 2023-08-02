@@ -8,7 +8,7 @@ const ProductList = async () => {
 
   console.log("products", products);
   return (
-    <div className="grid grid-cols-12 gap-4">
+    <div className="flex flex-col gap-4 md:grid md:grid-cols-12">
       {products.map((product) => (
         <ProductCard key={product.id} data={product} />
       ))}

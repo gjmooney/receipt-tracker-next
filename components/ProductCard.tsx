@@ -1,16 +1,15 @@
+import { toTitleCase } from "@/utils/utils";
 import { Product } from "@prisma/client";
+import { formatDistance } from "date-fns";
 import { FC } from "react";
+import { Button } from "./ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { toTitleCase } from "@/utils/utils";
-import { format, formatDistance } from "date-fns";
-import { Button } from "./ui/button";
 
 interface ProductCardProps {
   data: Product;
@@ -18,7 +17,7 @@ interface ProductCardProps {
 
 const ProductCard: FC<ProductCardProps> = ({ data }) => {
   return (
-    <Card className="col-span-6 flex flex-col justify-evenly bg-slate-100 text-slate-700">
+    <Card className="flex flex-col justify-evenly bg-slate-100 text-slate-700 md:col-span-6 ">
       <CardHeader>
         <CardTitle>{toTitleCase(data.type)}</CardTitle>
         <CardDescription>
@@ -41,7 +40,7 @@ const ProductCard: FC<ProductCardProps> = ({ data }) => {
           <Button className="basis-2/12" variant={"destructive"}>
             Delete
           </Button>
-          <div className=" basis-1/3 space-y-1">
+          <div className="hidden basis-1/3 space-y-1 md:block">
             <p className="text-sm font-medium leading-none">Last updated at:</p>
             <p className="text-sm text-muted-foreground">
               {formatDistance(data.updatedAt, new Date(), { addSuffix: true })}
