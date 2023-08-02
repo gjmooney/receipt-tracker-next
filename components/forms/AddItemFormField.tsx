@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { toTitleCase } from "@/utils/utils";
 
 interface AddItemFormFieldProps {
   name: keyof AddItemRequest;
@@ -41,12 +42,6 @@ const AddItemFormField: FC<AddItemFormFieldProps> = ({
   className,
 }) => {
   const { setValue } = useFormContext<AddItemRequest>();
-
-  function toTitleCase(str: string) {
-    return str.replace(/\w\S*/g, function (txt) {
-      return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
-    });
-  }
 
   const onSetValue = (value: string) => setValue(name, value);
 
