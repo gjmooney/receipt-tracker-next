@@ -84,5 +84,7 @@ model Store {
   address            Json
   lat                Int?
   long               Int?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
   purchasesFromStore Purchase[]
 }
