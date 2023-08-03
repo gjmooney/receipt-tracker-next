@@ -1,8 +1,8 @@
 import { Store } from "@prisma/client";
+import { formatDistance } from "date-fns";
 import { FC } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { formatDistance } from "date-fns";
 
 interface StoreCardProps {
   data: Store;

@@ -1,12 +1,12 @@
-import { db } from "@/lib/db";
+import { Product } from "@prisma/client";
+import { FC } from "react";
 import ProductCard from "./ProductCard";
 
-interface ProductListProps {}
+interface ProductListProps {
+  products: Product[];
+}
 
-const ProductList = async () => {
-  const products = await db.product.findMany();
-
-  console.log("products", products);
+const ProductList: FC<ProductListProps> = async ({ products }) => {
   return (
     <div className="flex flex-col gap-4 md:grid md:grid-cols-12">
       {products.map((product) => (

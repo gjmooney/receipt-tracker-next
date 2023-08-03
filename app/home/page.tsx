@@ -1,12 +1,13 @@
 import ProductList from "@/components/ProductList";
 import { buttonVariants } from "@/components/ui/button";
+import { db } from "@/lib/db";
 import Link from "next/link";
 import { FC } from "react";
 
 interface pageProps {}
 
 const page: FC<pageProps> = async ({}) => {
-  
+  const products = await db.product.findMany();
 
   return (
     <div className="">
@@ -16,7 +17,7 @@ const page: FC<pageProps> = async ({}) => {
         </Link>
       </div>
       <div className="">list of items</div>
-      <ProductList />
+      <ProductList products={products} />
     </div>
   );
 };
