@@ -1,4 +1,3 @@
-import { toTitleCase } from "@/utils/utils";
 import { Product } from "@prisma/client";
 import { formatDistance } from "date-fns";
 import { FC } from "react";
@@ -19,8 +18,8 @@ const ProductCard: FC<ProductCardProps> = ({ data }) => {
   return (
     <Card className="flex flex-col justify-evenly bg-slate-100 text-slate-700 md:col-span-6 ">
       <CardHeader>
-        <CardTitle>{toTitleCase(data.type)}</CardTitle>
-        <CardDescription>
+        <CardTitle className="capitalize">{data.type}</CardTitle>
+        <CardDescription className="capitalize">
           {data.isProduce ? "Produce" : `${data.subtype} ${data.microtype}`}
         </CardDescription>
       </CardHeader>
@@ -30,7 +29,7 @@ const ProductCard: FC<ProductCardProps> = ({ data }) => {
         </div>
 
         <div className="flex justify-between py-6 text-sm text-muted-foreground">
-          <div className="grid grid-cols-[12px_1fr] items-start justify-center ">
+          <div className="grid grid-cols-[12px_1fr] items-start justify-center capitalize">
             <span className="flex h-2 w-2 translate-y-1.5 rounded-full bg-cyan-700" />
             {data.category}
           </div>
