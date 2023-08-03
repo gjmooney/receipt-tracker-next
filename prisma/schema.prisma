@@ -80,7 +80,9 @@ model Receipt {
 model Store {
   id                 String     @id @default(uuid())
   name               String
+  location           String
   address            Json
-  addressId          String     @unique
+  lat                Int?
+  long               Int?
   purchasesFromStore Purchase[]
 }
