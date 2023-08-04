@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { AddItemValidator } from "@/lib/validators/addItem";
+import { AddItemValidator } from "@/lib/validators/addItemForm";
 import { auth } from "@clerk/nextjs";
 import { z } from "zod";
 

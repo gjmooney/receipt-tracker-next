@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { AddItemRequest } from "@/lib/validators/addItem";
+import { AddItemRequest } from "@/lib/validators/addItemForm";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
