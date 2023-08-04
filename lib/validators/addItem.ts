@@ -4,6 +4,7 @@ import { z } from "zod";
 export const AddItemValidator = z.object({
   // fields for Product
   type: z.string(),
+  receiptText: z.string(),
   subtype: z.string().optional(),
   microtype: z.string().optional(),
   description: z.string().max(150).optional(),
@@ -12,6 +13,7 @@ export const AddItemValidator = z.object({
   upc: z.string(),
   brand: z.string().optional(),
   weight: z.coerce.number().positive(),
+  weightUnit: z.enum(["G", "KG", "ML", "CL", "L"]),
 });
 
 export type AddItemRequest = z.infer<typeof AddItemValidator>;
