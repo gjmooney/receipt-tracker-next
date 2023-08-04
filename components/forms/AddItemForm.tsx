@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Item } from "@radix-ui/react-select";
+import { cn } from "@/lib/utils";
 
 interface AddItemFormProps {}
 
@@ -133,7 +134,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               value={field.value}
               label="The type of the thing you bought"
               data={types}
-              description="olive (oil), pipe rigate (pasta), white (bean), kidney (bean)...? "
+              description="tomato, olive (oil), pipe rigate (pasta), white (bean), kidney (bean)...? "
             />
           )}
         />
@@ -174,102 +175,117 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormComboBox
-              name={field.name}
-              value={field.value}
-              label="Category"
-              description="Select the category (Optional)"
-              data={category}
-              className="col-span-6"
-            />
+        <div
+          className={cn(
+            form.getValues("isProduce")
+              ? "hidden"
+              : "col-span-full grid w-full grid-cols-12 gap-4 rounded-lg border p-4 px-3 md:px-6",
           )}
-        />
+        >
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormComboBox
+                name={field.name}
+                value={field.value}
+                label="Category"
+                description="Select the category (Optional)"
+                data={category}
+                className="col-span-6"
+              />
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="brand"
-          render={({ field }) => (
-            <FormComboBox
-              name={field.name}
-              value={field.value}
-              label="Brand"
-              description="Select the brand (Optional)"
-              data={brands}
-              className="col-span-6"
-            />
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="brand"
+            render={({ field }) => (
+              <FormComboBox
+                name={field.name}
+                value={field.value}
+                label="Brand"
+                description="Select the brand (Optional)"
+                data={brands}
+                className="col-span-6"
+              />
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="weight"
-          render={({ field }) => (
-            <FormItem className="col-span-6 ">
-              <FormLabel>Weight</FormLabel>
-              <FormControl>
-                <Input placeholder="the weight?" {...field} />
-              </FormControl>
-              <FormDescription>how much you get</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="weightUnit"
-          render={({ field }) => (
-            <FormItem className="col-span-6">
-              <FormLabel>Weight Unit</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <FormField
+            control={form.control}
+            name="weight"
+            render={({ field }) => (
+              <FormItem className="col-span-6 ">
+                <FormLabel>Weight</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue
-                      className="text-slate-600"
-                      placeholder="Select a unit of weight"
-                    />
-                  </SelectTrigger>
+                  <Input placeholder="the weight?" {...field} />
                 </FormControl>
-                <SelectContent>
-                  {weightUnits.map((unit) => (
-                    <SelectItem key={unit.value} value={unit.value}>
-                      {unit.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>Unit of Weight</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormDescription>how much you get</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="upc"
-          render={({ field }) => (
-            <FormItem className="col-span-full">
-              <FormLabel>UPC Number</FormLabel>
-              <FormControl>
-                <Input
-                  disabled={form.getValues("isProduce")}
-                  placeholder="UPC number?"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                13 digit number from the barcode (Not required for produce)
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="weightUnit"
+            render={({ field }) => (
+              <FormItem className="col-span-6">
+                <FormLabel>Weight Unit</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue
+                        className="text-slate-600"
+                        placeholder="Select a unit of weight"
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {weightUnits.map((unit) => (
+                      <SelectItem key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormDescription>Unit of Weight</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Button type="submit" className="col-span-full mt-6">
+          <FormField
+            control={form.control}
+            name="upc"
+            render={({ field }) => (
+              <FormItem className="col-span-full">
+                <FormLabel>UPC Number</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={form.getValues("isProduce")}
+                    placeholder="UPC number?"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  13 digit number from the barcode (Not required for produce)
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <Button
+          disabled={isLoading}
+          type="submit"
+          className="col-span-full mt-6"
+        >
           Submit
         </Button>
       </form>
