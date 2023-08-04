@@ -21,7 +21,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { toTitleCase } from "@/utils/utils";
 
-interface AddItemFormFieldProps {
+interface FormComboBoxProps {
   name: keyof AddItemRequest;
   label: string;
   value?: string;
@@ -33,7 +33,7 @@ interface AddItemFormFieldProps {
   className: string;
 }
 
-const AddItemFormField: FC<AddItemFormFieldProps> = ({
+const FormComboBox: FC<FormComboBoxProps> = ({
   name,
   label,
   value,
@@ -99,4 +99,4 @@ const AddItemFormField: FC<AddItemFormFieldProps> = ({
   );
 };
 
-export default AddItemFormField;
+export default FormComboBox;

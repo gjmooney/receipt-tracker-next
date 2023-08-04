@@ -19,7 +19,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import AddItemFormField from "./AddItemFormField";
+import FormComboBox from "./FormComboBox";
 
 interface AddItemFormProps {}
 
@@ -121,7 +121,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="type"
           render={({ field }) => (
-            <AddItemFormField
+            <FormComboBox
               className="col-span-full"
               name={field.name}
               value={field.value}
@@ -136,7 +136,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="subtype"
           render={({ field }) => (
-            <AddItemFormField
+            <FormComboBox
               className="col-span-6"
               name={field.name}
               value={field.value}
@@ -151,7 +151,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="microtype"
           render={({ field }) => (
-            <AddItemFormField
+            <FormComboBox
               className="col-span-6"
               name={field.name}
               value={field.value}
@@ -198,7 +198,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="brand"
           render={({ field }) => (
-            <AddItemFormField
+            <FormComboBox
               name={field.name}
               value={field.value}
               label="Brand"
@@ -213,7 +213,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="category"
           render={({ field }) => (
-            <AddItemFormField
+            <FormComboBox
               name={field.name}
               value={field.value}
               label="Category"
