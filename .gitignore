@@ -38,6 +38,7 @@ next-env.d.ts
 
 # local stuff
 notes.txt
+history.txt
 /receipts
 credits.txt
 .vscode
