@@ -1,7 +1,9 @@
 "use client";
 
 import { toast } from "@/hooks/use-toast";
-import { AddItemRequest, AddItemValidator } from "@/lib/validators/addItem";
+
+import { cn } from "@/lib/utils";
+import { AddItemRequest, AddItemValidator } from "@/lib/validators/addItemForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -19,7 +21,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import FormComboBox from "./FormComboBox";
 import {
   Select,
   SelectContent,
@@ -27,8 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Item } from "@radix-ui/react-select";
-import { cn } from "@/lib/utils";
+import FormComboBox from "./FormComboBox";
 
 interface AddItemFormProps {}
 
@@ -42,7 +42,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
   ];
 
   const brands = [
-    { label: "Leader Price", value: "leader_price" },
+    { label: "Leader Price", value: "leader price" },
     { label: "Eden", value: "eden" },
     { label: "Monoprix", value: "monoprix" },
   ];
@@ -51,6 +51,12 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     { label: "(Not) Dairy", value: "(not)dairy)" },
     { label: "Fake Meat", value: "fake_meat" },
     { label: "Produce", value: "produce" },
+  ];
+
+  const stores = [
+    { label: "Leader Cash", value: "leader cash" },
+    { label: "Monoprix", value: "monoprix" },
+    { label: "Casino", value: "casino" },
   ];
 
   const weightUnits = [
@@ -65,6 +71,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     resolver: zodResolver(AddItemValidator),
     defaultValues: {
       type: "",
+      receiptText: "",
       subtype: "",
       microtype: "",
       description: "",
@@ -80,6 +87,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
       const payload: AddItemRequest = fields;
 
       if (form.getValues("isProduce")) {
+        console.log("isProduce");
         const { data } = await axios.post(`/api/add-produce`, payload);
         return data;
       } else {
@@ -151,7 +159,6 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
-
               <FormDescription>Is this item sold by weight?</FormDescription>
               <FormMessage />
             </FormItem>
@@ -162,7 +169,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="receiptText"
           render={({ field }) => (
-            <FormItem className="col-span-full">
+            <FormItem className="col-span-8">
               <FormLabel>Receipt Text</FormLabel>
               <FormControl>
                 <Input placeholder="Receipt text?" {...field} />
@@ -175,11 +182,40 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="store"
+          render={({ field }) => (
+            <FormItem className="col-span-4">
+              <FormLabel>Store</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue
+                      className="text-slate-600"
+                      placeholder="Select a store"
+                    />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {stores.map((store) => (
+                    <SelectItem key={store.value} value={store.value}>
+                      {store.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>From store</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div
           className={cn(
             form.getValues("isProduce")
               ? "hidden"
-              : "col-span-full grid w-full grid-cols-12 gap-4 rounded-lg border p-4 px-3 md:px-6",
+              : "col-span-full grid w-full grid-cols-12 gap-4 rounded-lg  ",
           )}
         >
           <FormField
@@ -281,11 +317,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           />
         </div>
 
-        <Button
-          disabled={isLoading}
-          type="submit"
-          className="col-span-full mt-6"
-        >
+        <Button type="submit" className="col-span-full mt-6">
           Submit
         </Button>
       </form>
