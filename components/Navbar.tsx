@@ -23,6 +23,9 @@ const Navbar: FC<NavbarProps> = ({}) => {
         <Link href="/products" className="text-sm font-bold text-slate-700">
           Products
         </Link>
+        <Link href="/purchases" className="text-sm font-bold text-slate-700">
+          Purchases
+        </Link>
         <Link href="/stores" className="text-sm font-bold text-slate-700">
           Stores
         </Link>
