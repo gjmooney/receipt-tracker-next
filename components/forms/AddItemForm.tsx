@@ -20,6 +20,14 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import FormComboBox from "./FormComboBox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Item } from "@radix-ui/react-select";
 
 interface AddItemFormProps {}
 
@@ -32,16 +40,6 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     { label: "Cashews", value: "cashews" },
   ];
 
-  const subTypes = [
-    { label: "Oat", value: "oat" },
-    { label: "Soy", value: "soy" },
-  ];
-
-  const microTypes = [
-    { label: "Chocolate", value: "chocolate" },
-    { label: "Vanilla", value: "vanilla" },
-  ];
-
   const brands = [
     { label: "Leader Price", value: "leader_price" },
     { label: "Eden", value: "eden" },
@@ -52,6 +50,14 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     { label: "(Not) Dairy", value: "(not)dairy)" },
     { label: "Fake Meat", value: "fake_meat" },
     { label: "Produce", value: "produce" },
+  ];
+
+  const weightUnits = [
+    { label: "g", value: "G" },
+    { label: "Kg", value: "KG" },
+    { label: "Ml", value: "ML" },
+    { label: "Cl", value: "CL" },
+    { label: "l", value: "L" },
   ];
 
   const form = useForm<AddItemRequest>({
@@ -115,97 +121,56 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
         onSubmit={form.handleSubmit((e) => {
           submitForm(e);
         })}
-        className="grid w-full grid-cols-12 gap-2 rounded-lg border p-4 px-3 md:px-6"
+        className="grid w-full grid-cols-12 gap-4 rounded-lg border p-4 px-3 md:px-6"
       >
         <FormField
           control={form.control}
           name="type"
           render={({ field }) => (
             <FormComboBox
-              className="col-span-full"
+              className="col-span-8"
               name={field.name}
               value={field.value}
-              label="The thing you bought"
+              label="The type of the thing you bought"
               data={types}
-              description="Hummus, Milk, etc...? "
+              description="olive (oil), pipe rigate (pasta), white (bean), kidney (bean)...? "
             />
           )}
         />
 
         <FormField
           control={form.control}
-          name="subtype"
+          name="isProduce"
           render={({ field }) => (
-            <FormComboBox
-              className="col-span-6"
-              name={field.name}
-              value={field.value}
-              label="Subtype"
-              data={subTypes}
-              description="Oat, Soy, etc...? (Optional)"
-            />
+            <FormItem className="col-span-4 flex flex-col items-end justify-between">
+              <FormLabel className="pt-1">Sold by weight?</FormLabel>
+              <FormControl className="ml-7 ">
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+
+              <FormDescription>Is this item sold by weight?</FormDescription>
+              <FormMessage />
+            </FormItem>
           )}
         />
 
         <FormField
           control={form.control}
-          name="microtype"
+          name="receiptText"
           render={({ field }) => (
-            <FormComboBox
-              className="col-span-6"
-              name={field.name}
-              value={field.value}
-              label="Microtype"
-              data={microTypes}
-              description="Vanilla, Chocolate, etc...? (Optional)"
-            />
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem className="col-span-6 ">
-              <FormLabel>Description</FormLabel>
+            <FormItem className="col-span-full">
+              <FormLabel>Receipt Text</FormLabel>
               <FormControl>
-                <Input placeholder="Describe what you get?" {...field} />
+                <Input placeholder="Receipt text?" {...field} />
               </FormControl>
               <FormDescription>
-                Wax poetic about your hummus (Optional)
+                The item as it appears on your receipt
               </FormDescription>
               <FormMessage />
             </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="weight"
-          render={({ field }) => (
-            <FormItem className="col-span-6 ">
-              <FormLabel>Weight</FormLabel>
-              <FormControl>
-                <Input placeholder="the weight?" {...field} />
-              </FormControl>
-              <FormDescription>how much you get</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="brand"
-          render={({ field }) => (
-            <FormComboBox
-              name={field.name}
-              value={field.value}
-              label="Brand"
-              description="Select the brand (Optional)"
-              data={brands}
-              className="col-span-6"
-            />
           )}
         />
 
@@ -226,18 +191,58 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
 
         <FormField
           control={form.control}
-          name="isProduce"
+          name="brand"
           render={({ field }) => (
-            <FormItem className="col-span-3 flex flex-col items-start justify-between">
-              <FormLabel className="pt-1">Loose Produce?</FormLabel>
-              <FormControl className="ml-7 ">
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
+            <FormComboBox
+              name={field.name}
+              value={field.value}
+              label="Brand"
+              description="Select the brand (Optional)"
+              data={brands}
+              className="col-span-6"
+            />
+          )}
+        />
 
-              <FormDescription>Is this loose produce?</FormDescription>
+        <FormField
+          control={form.control}
+          name="weight"
+          render={({ field }) => (
+            <FormItem className="col-span-6 ">
+              <FormLabel>Weight</FormLabel>
+              <FormControl>
+                <Input placeholder="the weight?" {...field} />
+              </FormControl>
+              <FormDescription>how much you get</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="weightUnit"
+          render={({ field }) => (
+            <FormItem className="col-span-6">
+              <FormLabel>Weight Unit</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue
+                      className="text-slate-600"
+                      placeholder="Select a unit of weight"
+                    />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {weightUnits.map((unit) => (
+                    <SelectItem key={unit.value} value={unit.value}>
+                      {unit.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>Unit of Weight</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -247,7 +252,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="upc"
           render={({ field }) => (
-            <FormItem className="col-span-9">
+            <FormItem className="col-span-full">
               <FormLabel>UPC Number</FormLabel>
               <FormControl>
                 <Input
