@@ -33,6 +33,11 @@ model Product {
   type        String        @unique
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  category    String
+  upc         String        @unique
+  brand       String?
+  weight      Int
+  weightUnit  WeightUnit
   Price       Price[]
   Purchase    Purchase[]
   receiptText ReceiptText[]
@@ -43,10 +48,6 @@ model Produce {
   type        String        @unique
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  category    String
-  upc         String        @unique
-  brand       String?
-  weight      Int           @default(0)
   Price       Price[]
   Purchase    Purchase[]
   receiptText ReceiptText[]
