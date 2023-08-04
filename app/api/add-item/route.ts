@@ -13,32 +13,17 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    let {
-      type,
-      subtype,
-      microtype,
-      description,
-      category,
-      upc,
-      brand,
-      isProduce,
-    } = AddItemValidator.parse(body);
+    let { type, subtype, microtype, description, category, upc, brand } =
+      AddItemValidator.parse(body);
 
-    // set UPC if product is produce
-    // doing this because upc is used as part of identifier
-    if (isProduce) {
-      upc = "produce";
-    }
-
-    // return error if product is not produce
-    // and there's no UPC
+    // return error if there's no UPC
     if (!upc) {
       return new Response("UPC is required", { status: 400 });
     }
 
     const productExists = await db.product.findUnique({
       where: {
-        type_upc: { type, upc },
+        upc,
       },
     });
 
@@ -54,7 +39,6 @@ export async function POST(req: Request) {
           category,
           brand,
           upc,
-          isProduce,
         },
       });
 

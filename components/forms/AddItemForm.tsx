@@ -5,7 +5,7 @@ import { AddItemRequest, AddItemValidator } from "@/lib/validators/addItem";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -72,9 +72,13 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     mutationFn: async (fields: AddItemRequest) => {
       const payload: AddItemRequest = fields;
 
-      const { data } = await axios.post(`/api/add-item`, payload);
-
-      return data;
+      if (form.getValues("isProduce")) {
+        const { data } = await axios.post(`/api/add-produce`, payload);
+        return data;
+      } else {
+        const { data } = await axios.post(`/api/add-item`, payload);
+        return data;
+      }
     },
     onError: (error: any) => {
       //TODO use error codes for better handling
@@ -237,7 +241,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
                 />
               </FormControl>
               <FormDescription>
-                13 digit number from the barcode (Optional)
+                13 digit number from the barcode (Not required for produce)
               </FormDescription>
               <FormMessage />
             </FormItem>
