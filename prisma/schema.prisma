@@ -29,55 +29,60 @@ model User {
 }
 
 model Product {
-  id             String     @id @default(uuid())
-  type           String
-  subtype        String?
-  microtype      String?
-  timesPurchased Int?       @default(0)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  description    String?
-  category       String?
-  upc            String?    @unique
-  brand          String?
-  weight         Int        @default(0)
-  Purchase       Purchase[]
-  //TODO string of how product is represented on receipt (ocr)
-  Price          Price[]
+  id          String        @id @default(uuid())
+  type        String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Price       Price[]
+  Purchase    Purchase[]
+  receiptText ReceiptText[]
 }
 
 model Produce {
+  id          String        @id @default(uuid())
+  type        String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  category    String
+  upc         String        @unique
+  brand       String?
+  weight      Int           @default(0)
+  Price       Price[]
+  Purchase    Purchase[]
+  receiptText ReceiptText[]
+}
+
+model ReceiptText {
   id        String   @id @default(uuid())
-  type      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Price     Price[]
+  text      String   @unique
+  store     Store    @relation(fields: [storeId], references: [id])
+  storeId   String
+  Produce   Produce? @relation(fields: [produceId], references: [id])
+  produceId String?
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+
+  @@index([storeId])
+  @@index([produceId])
+  @@index([productId])
 }
 
 //this is entering a receipt
 model Purchase {
-  id            String   @id @default(uuid())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  product       Product  @relation(fields: [productId], references: [id])
-  productId     String
-  price         Int
-  datePurchased DateTime
-  onSale        Boolean
-  //quantityType  ProductType
-  // weightUnit    WeightUnit? should be on product
-  //quantityValue Int
-  fromStore     Store    @relation(fields: [storeId], references: [id])
-  storeId       String
-  receipt       Receipt? @relation(fields: [receiptId], references: [id])
-  receiptId     String?
-  submittedBy   User     @relation(fields: [userId], references: [id])
-  userId        String
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  produce   Produce[]
+  product   Product[]
+  store     Store     @relation(fields: [storeId], references: [id])
+  storeId   String
+  User      User      @relation(fields: [userId], references: [id])
+  userId    String
 
-  @@index([userId])
+  //TODO add receipt images
+
   @@index([storeId])
-  @@index([receiptId])
-  @@index([productId])
+  @@index([userId])
 }
 
 model Price {
@@ -86,32 +91,26 @@ model Price {
   onSale    Boolean
   fromStore Store    @relation(fields: [storeId], references: [id])
   storeId   String
-  product   Product? @relation(fields: [productId], references: [id])
-  productId String?
   produce   Produce? @relation(fields: [produceId], references: [id])
   produceId String?
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
 
   @@index([storeId])
-  @@index([productId])
   @@index([produceId])
-}
-
-// TODO: image of receipt for OCR stuff in future - can prob just put imge uri in Purchase model
-model Receipt {
-  id                 String     @id @default(uuid())
-  image              String     @unique
-  purchasesOnReceipt Purchase[]
+  @@index([productId])
 }
 
 model Store {
-  id                 String     @id @default(uuid())
+  id                 String        @id @default(uuid())
   name               String
   location           String
   address            Json
   lat                Int?
   long               Int?
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
   purchasesFromStore Purchase[]
+  ReceiptText        ReceiptText[]
   Price              Price[]
 }
