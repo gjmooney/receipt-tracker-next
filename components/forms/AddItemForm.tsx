@@ -108,6 +108,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     },
   });
 
+  //TODO: hide product fields behind produce check
   return (
     <Form {...form}>
       <form
@@ -165,7 +166,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem className="col-span-full ">
+            <FormItem className="col-span-6 ">
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Input placeholder="Describe what you get?" {...field} />
@@ -173,6 +174,21 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               <FormDescription>
                 Wax poetic about your hummus (Optional)
               </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="weight"
+          render={({ field }) => (
+            <FormItem className="col-span-6 ">
+              <FormLabel>Weight</FormLabel>
+              <FormControl>
+                <Input placeholder="the weight?" {...field} />
+              </FormControl>
+              <FormDescription>how much you get</FormDescription>
               <FormMessage />
             </FormItem>
           )}

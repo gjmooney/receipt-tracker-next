@@ -43,6 +43,7 @@ model Product {
   weight         Int        @default(0)
   Purchase       Purchase[]
   //TODO string of how product is represented on receipt (ocr)
+  Price          Price[]
 }
 
 model Produce {
@@ -50,6 +51,7 @@ model Produce {
   type      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Price     Price[]
 }
 
 //this is entering a receipt
@@ -79,12 +81,19 @@ model Purchase {
 }
 
 model Price {
-  id        String @id @default(uuid())
+  id        String   @id @default(uuid())
   price     Int
-  fromStore Store  @relation(fields: [storeId], references: [id])
+  onSale    Boolean
+  fromStore Store    @relation(fields: [storeId], references: [id])
   storeId   String
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+  produce   Produce? @relation(fields: [produceId], references: [id])
+  produceId String?
 
   @@index([storeId])
+  @@index([productId])
+  @@index([produceId])
 }
 
 // TODO: image of receipt for OCR stuff in future - can prob just put imge uri in Purchase model

@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+//TODO: add custom error messages
 export const AddItemValidator = z.object({
   // fields for Product
   type: z.string(),
@@ -10,6 +11,7 @@ export const AddItemValidator = z.object({
   isProduce: z.boolean().default(false),
   upc: z.string(),
   brand: z.string().optional(),
+  weight: z.coerce.number().positive(),
 });
 
 export type AddItemRequest = z.infer<typeof AddItemValidator>;

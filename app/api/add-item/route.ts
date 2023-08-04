@@ -13,8 +13,16 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    let { type, subtype, microtype, description, category, upc, brand } =
-      AddItemValidator.parse(body);
+    let {
+      type,
+      subtype,
+      microtype,
+      description,
+      category,
+      upc,
+      brand,
+      weight,
+    } = AddItemValidator.parse(body);
 
     // return error if there's no UPC
     if (!upc) {
@@ -39,6 +47,7 @@ export async function POST(req: Request) {
           category,
           brand,
           upc,
+          weight,
         },
       });
 
