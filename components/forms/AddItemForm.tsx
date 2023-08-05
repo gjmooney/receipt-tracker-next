@@ -35,10 +35,18 @@ interface AddItemFormProps {}
 const AddItemForm: FC<AddItemFormProps> = ({}) => {
   //TODO: all current array values will come from db
   // these are just for figuring it out
+  const varieties = [
+    { label: "Grape", value: "grape)" },
+    { label: "Red", value: "red" },
+    { label: "Olive", value: "olive" },
+    { label: "Graffiti", value: "graffiti" },
+  ];
+
   const types = [
-    { label: "Hummus", value: "hummus" },
-    { label: "Milk", value: "milk" },
-    { label: "Cashews", value: "cashews" },
+    { label: "Tomato", value: "tomato" },
+    { label: "Bell Pepper", value: "bell pepper" },
+    { label: "Oil", value: "oil" },
+    { label: "Eggplant", value: "eggplant" },
   ];
 
   const brands = [
@@ -78,6 +86,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
       category: "",
       brand: "",
       upc: "",
+      variety: "",
       isProduce: false,
     },
   });
@@ -123,7 +132,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     },
   });
 
-  //TODO: hide product fields behind produce check
+  //TODO:
   return (
     <Form {...form}>
       <form
@@ -134,15 +143,30 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
       >
         <FormField
           control={form.control}
+          name="variety"
+          render={({ field }) => (
+            <FormComboBox
+              className="col-span-5"
+              name={field.name}
+              value={field.value}
+              label="The variety of the thing you bought"
+              data={varieties}
+              description="grape(tomato) graffiti (eggplant) "
+            />
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="type"
           render={({ field }) => (
             <FormComboBox
-              className="col-span-8"
+              className="col-span-5"
               name={field.name}
               value={field.value}
               label="The type of the thing you bought"
               data={types}
-              description="tomato, olive (oil), pipe rigate (pasta), white (bean), kidney (bean)...? "
+              description="(grape) tomato (graffiti) eggplant "
             />
           )}
         />
@@ -151,7 +175,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="isProduce"
           render={({ field }) => (
-            <FormItem className="col-span-4 flex flex-col items-end justify-between">
+            <FormItem className="col-span-2 flex flex-col items-end justify-between">
               <FormLabel className="pt-1">Sold by weight?</FormLabel>
               <FormControl className="ml-7 ">
                 <Checkbox

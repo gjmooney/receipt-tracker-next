@@ -15,6 +15,7 @@ export const AddItemValidator = z.object({
   brand: z.string().optional(),
   weight: z.coerce.number().positive().optional(),
   weightUnit: z.enum(["G", "KG", "ML", "CL", "L"]).optional(),
+  variety: z.string()
 });
 
 export type AddItemRequest = z.infer<typeof AddItemValidator>;

@@ -37,6 +37,7 @@ model Product {
   upc         String        @unique
   brand       String?
   weight      Int
+  variety     String
   weightUnit  WeightUnit
   Price       Price[]
   Purchase    Purchase[]
@@ -48,6 +49,7 @@ model Produce {
   type        String        @unique
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  variety     String
   Price       Price[]
   Purchase    Purchase[]
   receiptText ReceiptText[]

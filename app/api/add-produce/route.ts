@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    let { type, receiptText, store } = AddItemValidator.parse(body);
+    let { type, receiptText, store, variety } = AddItemValidator.parse(body);
 
     const produceExists = await db.produce.findUnique({
       where: { type },
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     } else {
       // first we create the produce item
       const produce = await db.produce.create({
-        data: { type },
+        data: { type, variety },
       });
 
       // then we get the store id
