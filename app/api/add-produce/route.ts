@@ -15,6 +15,7 @@ export async function POST(req: Request) {
 
     let { type, receiptText, store, variety } = AddItemValidator.parse(body);
 
+    //TODO change to variety + type is unique
     const produceExists = await db.produce.findUnique({
       where: { type },
     });
