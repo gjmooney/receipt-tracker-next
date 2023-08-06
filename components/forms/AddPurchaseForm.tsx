@@ -4,7 +4,7 @@ import { toast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { FC } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -22,6 +22,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { cn } from "@/lib/utils";
 
 interface AddPurchaseFormProps {}
 
@@ -40,20 +42,27 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
     { label: "Casino", value: "casino" },
   ];
 
+  const urls = [{ value: "test1" }, { value: "test2" }];
+
   //TODO resolver, types, and defaults
-  const form = useForm({});
+  const form = useForm({
+    defaultValues: {
+      store: "",
+      urls: [
+        { value: "https://shadcn.com" },
+        { value: "http://twitter.com/shadcn" },
+      ],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    name: "urls",
+    control: form.control,
+  });
 
   const { mutate: submitForm, isLoading } = useMutation({
     mutationFn: async (fields: any) => {
-      const payload: any = fields;
-
-      if (form.getValues("isProduce")) {
-        const { data } = await axios.post(`/api/add-produce`, payload);
-        return data;
-      } else {
-        const { data } = await axios.post(`/api/add-item`, payload);
-        return data;
-      }
+      console.log("fields", fields);
     },
     onError: (error: any) => {
       //TODO use error codes for better handling
@@ -95,7 +104,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
           control={form.control}
           name="store"
           render={({ field }) => (
-            <FormItem className="col-span-4">
+            <FormItem className="col-span-full">
               <FormLabel>Store</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
@@ -121,36 +130,54 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
         />
 
         {/**receipt text should come from db */}
-        <FormField
-          control={form.control}
-          name="receiptText"
-          render={({ field }) => (
-            <FormItem className="col-span-4">
-              <FormLabel>Receipt Text</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue
-                      className="text-slate-600"
-                      placeholder="Text on the receipt"
-                    />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {receiptText.map((text) => (
-                    <SelectItem key={text.value} value={text.value}>
-                      {text.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Item as it appears on the receipt
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="col-span-full ">
+          {fields.map((field, index) => (
+            <FormField
+              control={form.control}
+              key={field.id}
+              name={`urls.${index}.value`}
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-12 gap-x-4">
+                  <FormLabel
+                    className={cn("col-span-full", index !== 0 && "sr-only")}
+                  >
+                    URLs
+                  </FormLabel>
+                  <FormDescription
+                    className={cn("col-span-full", index !== 0 && "sr-only")}
+                  >
+                    Add links to your website, blog, or social media profiles.
+                  </FormDescription>
+                  <FormControl>
+                    <Input className="col-span-10" {...field} />
+                  </FormControl>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="col-span-2 mt-2"
+                    onClick={() => remove(index)}
+                  >
+                    Delete
+                  </Button>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="mt-2"
+            onClick={() => append({ value: "" })}
+          >
+            Add another item
+          </Button>
+        </div>
+
+        <div className="col-span-full"></div>
+
         <Button type="submit" className="col-span-full mt-6">
           Submit
         </Button>
