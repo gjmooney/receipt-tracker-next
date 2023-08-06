@@ -61,6 +61,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     { label: "Produce", value: "produce" },
   ];
 
+  //TODO - use location to differentiate stores in chain
   const stores = [
     { label: "Leader Cash", value: "leader cash" },
     { label: "Monoprix", value: "monoprix" },
@@ -96,7 +97,6 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
       const payload: AddItemRequest = fields;
 
       if (form.getValues("isProduce")) {
-        console.log("isProduce");
         const { data } = await axios.post(`/api/add-produce`, payload);
         return data;
       } else {
@@ -132,7 +132,9 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     },
   });
 
-  //TODO:
+  //TODO: really just need separate form for produce
+  // right now doesn't work with no upc not by weight stuff
+  // like produce sold by piece
   return (
     <Form {...form}>
       <form
