@@ -24,12 +24,16 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "../ui/calendar";
 
 interface AddPurchaseFormProps {}
 
 const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
   //TODO - use location to differentiate stores in chain and pull from db
-  const stores = [
+  const storesList = [
     { label: "Leader Cash", value: "leader cash" },
     { label: "Monoprix", value: "monoprix" },
     { label: "Casino", value: "casino" },
@@ -48,15 +52,14 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
   const form = useForm({
     defaultValues: {
       store: "",
-      urls: [
-        { value: "https://shadcn.com" },
-        { value: "http://twitter.com/shadcn" },
-      ],
+      price: 0,
+      date: new Date(),
+      stores: storesList,
     },
   });
 
   const { fields, append, remove } = useFieldArray({
-    name: "urls",
+    name: "stores",
     control: form.control,
   });
 
@@ -104,7 +107,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
           control={form.control}
           name="store"
           render={({ field }) => (
-            <FormItem className="col-span-full">
+            <FormItem className="col-span-8">
               <FormLabel>Store</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
@@ -116,7 +119,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {stores.map((store) => (
+                  {storesList.map((store) => (
                     <SelectItem key={store.value} value={store.value}>
                       {store.label}
                     </SelectItem>
@@ -129,31 +132,79 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="date"
+          render={({ field }) => (
+            <FormItem className="col-span-4">
+              <FormLabel>Date of purchase</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground",
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormDescription>The date the purchase was made.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {/**receipt text should come from db */}
         <div className="col-span-full ">
           {fields.map((field, index) => (
             <FormField
               control={form.control}
               key={field.id}
-              name={`urls.${index}.value`}
+              name={`stores.${index}.label`}
               render={({ field }) => (
                 <FormItem className="grid grid-cols-12 gap-x-4">
                   <FormLabel
                     className={cn("col-span-full", index !== 0 && "sr-only")}
                   >
-                    URLs
+                    Items
                   </FormLabel>
                   <FormDescription
                     className={cn("col-span-full", index !== 0 && "sr-only")}
                   >
-                    Add links to your website, blog, or social media profiles.
+                    Add the items you bought on this purchase.
                   </FormDescription>
                   <FormControl>
-                    <Input className="col-span-10" {...field} />
+                    <Input className="col-span-6" {...field} />
                   </FormControl>
+
+                  <FormControl>
+                    <Input className="col-span-4" {...field} />
+                  </FormControl>
+
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="destructive"
                     size="sm"
                     className="col-span-2 mt-2"
                     onClick={() => remove(index)}
@@ -170,7 +221,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
             variant="outline"
             size="sm"
             className="mt-2"
-            onClick={() => append({ value: "" })}
+            onClick={() => append({ value: "", label: "" })}
           >
             Add another item
           </Button>
