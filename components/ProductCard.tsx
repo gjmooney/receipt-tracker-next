@@ -17,30 +17,31 @@ interface ProductCardProps {
 const ProductCard: FC<ProductCardProps> = ({ data }) => {
   return (
     <Card className="flex flex-col justify-evenly bg-slate-100 text-slate-700 md:col-span-6 ">
-      <CardHeader>
-        <CardTitle className="capitalize">{data.type}</CardTitle>
-        <CardDescription className="capitalize">
-          {data.isProduce ? "Produce" : `${data.subtype} ${data.microtype}`}
+      <CardHeader className=" w-fit">
+        <CardTitle className="capitalize">
+          {data.variety} {data.type}
+        </CardTitle>
+        <CardDescription className="">
+          <span className="lowercase">
+            {data.weight}
+            {data.weightUnit}{" "}
+            <div className="inline-block capitalize"> {data.category}</div>
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent className="gap-4">
         <div className=" col-span-full items-center space-x-4 rounded-md border border-slate-700 p-4">
-          description
+          TODO: price and purchase history
         </div>
 
         <div className="flex justify-between py-6 text-sm text-muted-foreground">
           <div className="grid grid-cols-[12px_1fr] items-start justify-center capitalize">
             <span className="flex h-2 w-2 translate-y-1.5 rounded-full bg-cyan-700" />
-            {data.category}
-          </div>
-
-          <div className="grid grid-cols-[12px_1fr] items-start justify-center ">
-            <span className="bg- flex h-2 w-2 translate-y-1.5 rounded-full" />
-            Purchased {data.timesPurchased} times
+            {/** add times purchased to schema */}
+            Purchased 10 times
           </div>
         </div>
 
-        {/* <div className="">edit delete time purchased</div> */}
         <div className="flex justify-between gap-4">
           <Button className="basis-1/3">Edit</Button>
           <Button className="basis-2/12" variant={"destructive"}>
