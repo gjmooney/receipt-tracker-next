@@ -55,11 +55,12 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
       price: 0,
       date: new Date(),
       stores: storesList,
+      entries: [{ name: "test", price: 0 }],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
-    name: "stores",
+    name: "entries",
     control: form.control,
   });
 
@@ -181,7 +182,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
             <FormField
               control={form.control}
               key={field.id}
-              name={`stores.${index}.label`}
+              name={`entries.${index}`}
               render={({ field }) => (
                 <FormItem className="grid grid-cols-12 gap-x-4">
                   <FormLabel
@@ -195,11 +196,17 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
                     Add the items you bought on this purchase.
                   </FormDescription>
                   <FormControl>
-                    <Input className="col-span-6" {...field} />
+                    <Input
+                      className="col-span-6"
+                      {...form.register(`entries.${index}.name`)}
+                    />
                   </FormControl>
 
                   <FormControl>
-                    <Input className="col-span-4" {...field} />
+                    <Input
+                      className="col-span-4"
+                      {...form.register(`entries.${index}.price`)}
+                    />
                   </FormControl>
 
                   <Button
@@ -221,7 +228,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
             variant="outline"
             size="sm"
             className="mt-2"
-            onClick={() => append({ value: "", label: "" })}
+            onClick={() => append({ name: "", price: 0 })}
           >
             Add another item
           </Button>
