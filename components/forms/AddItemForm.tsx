@@ -76,6 +76,8 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     { label: "l", value: "L" },
   ];
 
+  //TODO reset after submit
+  //TODO think i do want a subvariety as well
   const form = useForm<AddItemRequest>({
     resolver: zodResolver(AddItemValidator),
     defaultValues: {
