@@ -43,9 +43,9 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
 
   //TODO pull from db - populate based on selected store
   const receiptText = [
-    { label: "Leader Cash", value: "leader cash" },
-    { label: "Monoprix", value: "monoprix" },
-    { label: "Casino", value: "casino" },
+    { label: "Leader Cash receipt", value: "leader cash" },
+    { label: "Monoprix receipt", value: "monoprix" },
+    { label: "Casino receipt", value: "casino" },
   ];
 
   const urls = [{ value: "test1" }, { value: "test2" }];
@@ -54,7 +54,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
   //TODO resolver, types, and defaults
   const form = useForm({
     defaultValues: {
-      store: "",
+      store: "wiggle",
       price: 0,
       date: new Date(),
       entries: [{ name: "test", price: 0 }],
@@ -68,7 +68,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
 
   const { mutate: submitForm, isLoading } = useMutation({
     mutationFn: async (fields: any) => {
-      console.log("fields", fields);
+      //console.log("fields", fields);
     },
     onError: (error: any) => {
       //TODO use error codes for better handling
@@ -112,13 +112,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
           render={({ field }) => (
             <FormItem className="col-span-8">
               <FormLabel>Store</FormLabel>
-              <Select
-                onValueChange={() => {
-                  field.onChange;
-                  setSelectedStore(field.value);
-                }}
-                defaultValue={field.value}
-              >
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue
@@ -129,12 +123,8 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
                 </FormControl>
                 <SelectContent>
                   {stores.map((store) => (
-                    <SelectItem
-                      className="capitalize"
-                      key={store.id}
-                      value={store.name}
-                    >
-                      {store.name}
+                    <SelectItem key={store.id} value={store.name}>
+                      <p className="capitalize">{store.name}</p>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -207,19 +197,48 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
                   >
                     Add the items you bought on this purchase.
                   </FormDescription>
-                  <FormControl>
-                    <Input
-                      className="col-span-6"
-                      {...form.register(`entries.${index}.name`)}
-                    />
-                  </FormControl>
 
-                  <FormControl>
-                    <Input
-                      className="col-span-4"
-                      {...form.register(`entries.${index}.price`)}
-                    />
-                  </FormControl>
+                  <FormField
+                    control={form.control}
+                    name={`entries.${index}.name`}
+                    render={({ field }) => (
+                      <FormItem className="col-span-5">
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a verified email to display" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {receiptText.map((text) => (
+                              <SelectItem
+                                className="capitalize"
+                                key={text.label}
+                                value={text.value}
+                              >
+                                {text.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`entries.${index}.price`}
+                    render={({ field }) => (
+                      <FormItem className="col-span-5">
+                        <FormControl>
+                          <Input placeholder="shadcn" {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
 
                   <Button
                     type="button"
