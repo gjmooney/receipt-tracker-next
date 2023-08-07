@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     // return error if there's no UPC
     // do check here because it's not being enforced at form level
     // because of produce option
-    if (!upc  || !weight || !weightUnit) {
+    if (!upc || !weight || !weightUnit) {
       return new Response("Value is required", { status: 400 });
     }
 
@@ -61,7 +61,6 @@ export async function POST(req: Request) {
       const storeId = await db.store.findFirst({
         where: { name: store },
       });
-      console.log("storeId", storeId);
 
       // then we create the receiptText entry
 
