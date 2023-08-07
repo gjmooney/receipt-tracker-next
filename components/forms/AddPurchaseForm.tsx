@@ -3,7 +3,7 @@
 import { toast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
   Form,
@@ -28,16 +28,18 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
+import { Store } from "@prisma/client";
 
-interface AddPurchaseFormProps {}
+interface AddPurchaseFormProps {
+  stores: Store[];
+}
 
-const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
-  //TODO - use location to differentiate stores in chain and pull from db
-  const storesList = [
-    { label: "Leader Cash", value: "leader cash" },
-    { label: "Monoprix", value: "monoprix" },
-    { label: "Casino", value: "casino" },
-  ];
+const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
+  const [selectedStore, setSelectedStore] = useState("");
+
+  useEffect(() => {
+    console.log("selectedStore", selectedStore);
+  }, [selectedStore]);
 
   //TODO pull from db - populate based on selected store
   const receiptText = [
@@ -48,13 +50,13 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
 
   const urls = [{ value: "test1" }, { value: "test2" }];
 
+  //TODO - use location to differentiate stores in chain and
   //TODO resolver, types, and defaults
   const form = useForm({
     defaultValues: {
       store: "",
       price: 0,
       date: new Date(),
-      stores: storesList,
       entries: [{ name: "test", price: 0 }],
     },
   });
@@ -110,7 +112,13 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
           render={({ field }) => (
             <FormItem className="col-span-8">
               <FormLabel>Store</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={() => {
+                  field.onChange;
+                  setSelectedStore(field.value);
+                }}
+                defaultValue={field.value}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue
@@ -120,9 +128,13 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({}) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {storesList.map((store) => (
-                    <SelectItem key={store.value} value={store.value}>
-                      {store.label}
+                  {stores.map((store) => (
+                    <SelectItem
+                      className="capitalize"
+                      key={store.id}
+                      value={store.name}
+                    >
+                      {store.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

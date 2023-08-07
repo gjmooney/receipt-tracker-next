@@ -16,11 +16,13 @@ const page: FC<pageProps> = async ({}) => {
     },
   });
 
+  const stores = await db.store.findMany();
+
   const arr = [...products, ...produce];
   //console.log("products", arr);
   //console.log("produce", produce);
 
-  return <AddPurchaseForm />;
+  return <AddPurchaseForm stores={stores} />;
 };
 
 export default page;
