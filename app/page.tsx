@@ -11,17 +11,7 @@ const page: FC<pageProps> = async ({}) => {
 
   return (
     <main className="flex flex-col gap-4">
-      <div>
-        <p>this is the home page woooo</p>
-        <Link href="/add-item" className={buttonVariants()}>
-          Add New Item
-        </Link>
-      </div>
-      {products.length !== 0 ? (
-        <ProductList products={products} />
-      ) : (
-        <div>Add an item to get started</div>
-      )}
+      <p>this is the home page woooo</p>
     </main>
   );
 };
