@@ -34,35 +34,28 @@ interface AddPurchaseFormProps {
   stores: Store[];
   receiptTexts: ReceiptText[];
 }
+type rct = Pick<ReceiptText, "id" | "text">;
 
 const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
   stores,
   receiptTexts,
 }) => {
   const [selectedStoreId, setSelectedStoreId] = useState("");
-  const [receiptTextOptions, setReceiptTextOptions] = useState<string[]>([]);
+  const [receiptTextOptions, setReceiptTextOptions] = useState<rct[]>([]);
 
   useEffect(() => {
     // get all the receipt texts from the selected store
+    console.log("receiptTexts", receiptTexts);
     const filteredReceipts = receiptTexts
-      .filter((store) => store.storeId === selectedStoreId)
-      .map((receipt) => {
-        return receipt.text;
+      .filter((receipt) => receipt.storeId === selectedStoreId)
+      .map(({ text, id }) => {
+        return { text, id };
       });
 
     console.log("selectedStoreId", selectedStoreId);
 
     setReceiptTextOptions(filteredReceipts);
   }, [receiptTexts, selectedStoreId]);
-
-  //TODO pull from db - populate based on selected store
-  const receiptText = [
-    { label: "Leader Cash receipt", value: "leader cash" },
-    { label: "Monoprix receipt", value: "monoprix" },
-    { label: "Casino receipt", value: "casino" },
-  ];
-
-  const urls = [{ value: "test1" }, { value: "test2" }];
 
   //TODO - use location to differentiate stores in chain and
   //TODO resolver, types, and defaults
@@ -236,10 +229,10 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                             {receiptTextOptions.map((text) => (
                               <SelectItem
                                 className="capitalize"
-                                key={text}
-                                value={text}
+                                key={text.id}
+                                value={text.id}
                               >
-                                <span className="capitalize">{text}</span>
+                                <span className="capitalize">{text.text}</span>
                               </SelectItem>
                             ))}
                           </SelectContent>
