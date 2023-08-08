@@ -29,7 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { escape } from "querystring";
 
 interface AddPurchaseFormProps {
   stores: Store[];
@@ -51,6 +50,8 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
         return receipt.text;
       });
 
+    console.log("selectedStoreId", selectedStoreId);
+
     setReceiptTextOptions(filteredReceipts);
   }, [receiptTexts, selectedStoreId]);
 
@@ -67,8 +68,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
   //TODO resolver, types, and defaults
   const form = useForm({
     defaultValues: {
-      store: "wiggle",
-      price: 0,
+      store: "",
       date: new Date(),
       entries: [{ name: "test", price: 0 }],
     },
@@ -127,7 +127,8 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
               <FormLabel>Store</FormLabel>
               <Select
                 onValueChange={(value) => {
-                  field.onChange;
+                  console.log("value", value);
+                  field.onChange(value);
 
                   setSelectedStoreId(value);
                 }}
@@ -228,7 +229,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a verified email to display" />
+                              <SelectValue placeholder="Select a receipt item" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -238,7 +239,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                                 key={text}
                                 value={text}
                               >
-                                {text}
+                                <span className="capitalize">{text}</span>
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -253,7 +254,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                     render={({ field }) => (
                       <FormItem className="col-span-5">
                         <FormControl>
-                          <Input placeholder="shadcn" {...field} />
+                          <Input placeholder="price" {...field} />
                         </FormControl>
                       </FormItem>
                     )}
