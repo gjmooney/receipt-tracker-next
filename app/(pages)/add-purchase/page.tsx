@@ -17,12 +17,13 @@ const page: FC<pageProps> = async ({}) => {
   });
 
   const stores = await db.store.findMany();
+  const receiptTexts = await db.receiptText.findMany();
 
   const arr = [...products, ...produce];
   //console.log("products", arr);
   //console.log("produce", produce);
 
-  return <AddPurchaseForm stores={stores} />;
+  return <AddPurchaseForm stores={stores} receiptTexts={receiptTexts} />;
 };
 
 export default page;

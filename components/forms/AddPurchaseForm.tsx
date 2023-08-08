@@ -1,10 +1,16 @@
 "use client";
 
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { ReceiptText, Store } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { FC, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
 import {
   Form,
   FormControl,
@@ -14,6 +20,8 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { Input } from "../ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
   Select,
   SelectContent,
@@ -21,25 +29,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "../ui/calendar";
-import { Store } from "@prisma/client";
+import { escape } from "querystring";
 
 interface AddPurchaseFormProps {
   stores: Store[];
+  receiptTexts: ReceiptText[];
 }
 
-const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
-  const [selectedStore, setSelectedStore] = useState("");
+const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
+  stores,
+  receiptTexts,
+}) => {
+  const [selectedStoreId, setSelectedStoreId] = useState("");
+  const [receiptTextOptions, setReceiptTextOptions] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log("selectedStore", selectedStore);
-  }, [selectedStore]);
+    // get all the receipt texts from the selected store
+    const filteredReceipts = receiptTexts
+      .filter((store) => store.storeId === selectedStoreId)
+      .map((receipt) => {
+        return receipt.text;
+      });
+
+    setReceiptTextOptions(filteredReceipts);
+  }, [receiptTexts, selectedStoreId]);
 
   //TODO pull from db - populate based on selected store
   const receiptText = [
@@ -68,7 +81,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
 
   const { mutate: submitForm, isLoading } = useMutation({
     mutationFn: async (fields: any) => {
-      //console.log("fields", fields);
+      console.log("fields", fields);
     },
     onError: (error: any) => {
       //TODO use error codes for better handling
@@ -112,7 +125,14 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
           render={({ field }) => (
             <FormItem className="col-span-8">
               <FormLabel>Store</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={(value) => {
+                  field.onChange;
+
+                  setSelectedStoreId(value);
+                }}
+                defaultValue={field.value}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue
@@ -123,7 +143,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
                 </FormControl>
                 <SelectContent>
                   {stores.map((store) => (
-                    <SelectItem key={store.id} value={store.name}>
+                    <SelectItem key={store.id} value={store.id}>
                       <p className="capitalize">{store.name}</p>
                     </SelectItem>
                   ))}
@@ -178,7 +198,6 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
           )}
         />
 
-        {/**receipt text should come from db */}
         <div className="col-span-full ">
           {fields.map((field, index) => (
             <FormField
@@ -213,13 +232,13 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({ stores }) => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {receiptText.map((text) => (
+                            {receiptTextOptions.map((text) => (
                               <SelectItem
                                 className="capitalize"
-                                key={text.label}
-                                value={text.value}
+                                key={text}
+                                value={text}
                               >
-                                {text.label}
+                                {text}
                               </SelectItem>
                             ))}
                           </SelectContent>

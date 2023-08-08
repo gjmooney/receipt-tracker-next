@@ -68,7 +68,7 @@ export async function POST(req: Request) {
         data: {
           text: receiptText,
           storeId: storeId!.id,
-          produceId: product.id,
+          productId: product.id,
         },
       });
 
