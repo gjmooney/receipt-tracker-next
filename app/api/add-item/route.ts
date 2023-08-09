@@ -16,26 +16,30 @@ export async function POST(req: Request) {
     let {
       type,
       variety,
+      isProduce,
+      receiptText,
+      store,
       category,
-      upc,
       brand,
       weight,
       weightUnit,
-      store,
-      receiptText,
+      upc,
     } = AddItemValidator.parse(body);
 
-    // return error if there's no UPC
-    // do check here because it's not being enforced at form level
-    // because of produce option
-    if (!upc || !weight || !weightUnit) {
+    /* return error if there's no UPC/weight/weight unit
+     do check here because it's not being enforced at form level
+     because of produce possibility */
+    if (!isProduce && (!upc || !weight || !weightUnit)) {
       return new Response("Value is required", { status: 400 });
     }
 
-    // TODO change schema to type + variety (+ weight) is unique ?
     const productExists = await db.product.findUnique({
       where: {
-        upc,
+        variety_type_weight: {
+          variety,
+          type,
+          weight,
+        },
       },
     });
 
@@ -46,24 +50,24 @@ export async function POST(req: Request) {
       const product = await db.product.create({
         data: {
           type,
+          variety,
           category,
           brand,
-          upc,
           weight,
           weightUnit,
-          variety,
+          upc,
         },
       });
 
       // then we get the store id
       // (store is from a select component
       // so we know it exists)
+      // TODO: need to check location as well
       const storeId = await db.store.findFirst({
         where: { name: store },
       });
 
       // then we create the receiptText entry
-
       const receiptTextEntry = await db.receiptText.create({
         data: {
           text: receiptText,

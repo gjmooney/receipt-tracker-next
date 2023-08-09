@@ -20,6 +20,7 @@ enum WeightUnit {
   ML
   CL
   L
+  UNIT
 }
 
 model User {
@@ -30,29 +31,20 @@ model User {
 
 model Product {
   id          String        @id @default(uuid())
-  variety     String
-  type        String        @unique
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  variety     String
+  type        String
+  upc         String?       @unique
   category    String?
-  upc         String        @unique
   brand       String?
   weight      Int
   weightUnit  WeightUnit
   Price       Price[]
   Purchase    Purchase[]
   receiptText ReceiptText[]
-}
 
-model Produce {
-  id          String        @id @default(uuid())
-  type        String        @unique
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  variety     String
-  Price       Price[]
-  Purchase    Purchase[]
-  receiptText ReceiptText[]
+  @@unique([variety, type, weight])
 }
 
 model ReceiptText {
@@ -60,13 +52,10 @@ model ReceiptText {
   text      String   @unique
   store     Store    @relation(fields: [storeId], references: [id])
   storeId   String
-  Produce   Produce? @relation(fields: [produceId], references: [id])
-  produceId String?
   Product   Product? @relation(fields: [productId], references: [id])
   productId String?
 
   @@index([storeId])
-  @@index([produceId])
   @@index([productId])
 }
 
@@ -75,7 +64,6 @@ model Purchase {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  produce   Produce[]
   product   Product[]
   store     Store     @relation(fields: [storeId], references: [id])
   storeId   String
@@ -94,13 +82,10 @@ model Price {
   onSale    Boolean
   fromStore Store    @relation(fields: [storeId], references: [id])
   storeId   String
-  produce   Produce? @relation(fields: [produceId], references: [id])
-  produceId String?
   Product   Product? @relation(fields: [productId], references: [id])
   productId String?
 
   @@index([storeId])
-  @@index([produceId])
   @@index([productId])
 }
 

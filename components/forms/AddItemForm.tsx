@@ -83,8 +83,6 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     defaultValues: {
       type: "",
       receiptText: "",
-      subtype: "",
-      microtype: "",
       description: "",
       category: "",
       brand: "",
@@ -98,13 +96,24 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     mutationFn: async (fields: AddItemRequest) => {
       const payload: AddItemRequest = fields;
 
+      /* here we set the form fields that are optional for produce
+       but required in the schema. TODO: idk this feels wrong? */
       if (form.getValues("isProduce")) {
+        payload.weight = 1;
+        payload.weightUnit = "UNIT";
+        payload.category = "produce";
+      }
+
+      const { data } = await axios.post(`/api/add-item`, payload);
+      return data;
+      /* if (form.getValues("isProduce")) {
+        payload.weight = 1;
         const { data } = await axios.post(`/api/add-produce`, payload);
         return data;
       } else {
         const { data } = await axios.post(`/api/add-item`, payload);
         return data;
-      }
+      } */
     },
     onError: (error: any) => {
       //TODO use error codes for better handling
@@ -179,15 +188,15 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           control={form.control}
           name="isProduce"
           render={({ field }) => (
-            <FormItem className="col-span-2 flex flex-col items-end justify-between">
-              <FormLabel className="pt-1">Sold by weight?</FormLabel>
-              <FormControl className="ml-7 ">
+            <FormItem className="col-span-2 flex flex-col items-start justify-between">
+              <FormLabel className="pt-1">Produce?</FormLabel>
+              <FormControl className="ml-7">
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
-              <FormDescription>Is this item sold by weight?</FormDescription>
+              <FormDescription>Is this item produce?</FormDescription>
               <FormMessage />
             </FormItem>
           )}
