@@ -39,7 +39,7 @@ model Product {
   category    String?
   brand       String?
   weight      Int
-  weightUnit  WeightUnit
+  weightUnit  WeightUnit?
   Price       Price[]
   Purchase    Purchase[]
   receiptText ReceiptText[]

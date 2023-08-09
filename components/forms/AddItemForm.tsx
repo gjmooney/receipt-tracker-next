@@ -82,13 +82,15 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     resolver: zodResolver(AddItemValidator),
     defaultValues: {
       type: "",
-      receiptText: "",
-      description: "",
-      category: "",
-      brand: "",
-      upc: "",
       variety: "",
       isProduce: false,
+      receiptText: "",
+      store: undefined,
+      category: undefined,
+      brand: undefined,
+      weight: undefined,
+      weightUnit: "UNIT",
+      upc: "",
     },
   });
 
@@ -96,11 +98,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     mutationFn: async (fields: AddItemRequest) => {
       const payload: AddItemRequest = fields;
 
-      /* here we set the form fields that are optional for produce
-       but required in the schema. TODO: idk this feels wrong? */
       if (form.getValues("isProduce")) {
-        payload.weight = 1;
-        payload.weightUnit = "UNIT";
         payload.category = "produce";
       }
 

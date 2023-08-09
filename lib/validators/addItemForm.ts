@@ -14,8 +14,8 @@ export const AddItemValidator = z.object({
   brand: z.string().optional(),
 
   // required for not produce
-  weight: z.coerce.number().positive(),
-  weightUnit: z.enum(["G", "KG", "ML", "CL", "L", "UNIT"]),
+  weight: z.coerce.number().positive().optional(),
+  weightUnit: z.enum(["G", "KG", "ML", "CL", "L", "UNIT"]).optional(),
   upc: z.string().optional(),
 
   // might keep might delete

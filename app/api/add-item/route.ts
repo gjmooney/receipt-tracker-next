@@ -33,6 +33,19 @@ export async function POST(req: Request) {
       return new Response("Value is required", { status: 400 });
     }
 
+    // items have unique UPC codes if they have one
+    // if they don't, then the product is produce, and
+    // variety + type should be unique
+    // so if an item is produce we create it with the weight
+    // set to -1 so it can be used in the schema.
+    // variety + type + weight is also unique for non produce
+    // items
+
+    // set weight to -1 for produce items (no upc)
+    if (!weight) {
+      weight = -1;
+    }
+
     const productExists = await db.product.findUnique({
       where: {
         variety_type_weight: {
@@ -42,6 +55,9 @@ export async function POST(req: Request) {
         },
       },
     });
+
+    //TODO if product exists and receipt text is different
+    // we want to make a new receipt text
 
     if (productExists) {
       return new Response("Product already exists", { status: 409 });
@@ -58,6 +74,9 @@ export async function POST(req: Request) {
           upc,
         },
       });
+
+      //TODO maybe need error handling for these other db calls
+      // should separate them out
 
       // then we get the store id
       // (store is from a select component
@@ -95,7 +114,6 @@ export async function POST(req: Request) {
       return new Response(error.message, { status: 422 });
     }
 
-    console.log("error", error);
     return new Response("is Broke", { status: 500 });
   }
 }
