@@ -21,8 +21,6 @@ const page: FC<pageProps> = async ({ params }) => {
     redirect("/sign-in");
   }
 
-  console.log("slug", slug);
-
   const product = await db.product.findUnique({
     where: {
       id: slug,
@@ -31,14 +29,12 @@ const page: FC<pageProps> = async ({ params }) => {
 
   const stores = await db.store.findMany();
 
-  console.log("product", product);
-
   return (
     <div>
       {product ? (
         <>
           <ProductCard data={product} />
-          <ReceiptTextForm stores={stores} />
+          <ReceiptTextForm stores={stores} productId={slug} />
         </>
       ) : (
         <div>Product not found</div>

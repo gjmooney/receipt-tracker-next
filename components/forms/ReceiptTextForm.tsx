@@ -22,18 +22,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Button } from "../ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AddReceiptTextRequest,
+  AddReceiptTextValidator,
+} from "@/lib/validators/addReceiptTextVal";
+import axios, { AxiosError } from "axios";
+import { toast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
 
 interface ReceiptTextFormProps {
   stores: Store[];
+  productId: string;
 }
 
 type ReceiptTextOptionsType = Pick<ReceiptText, "id" | "text">;
 
-const ReceiptTextForm: FC<ReceiptTextFormProps> = ({ stores }) => {
+const ReceiptTextForm: FC<ReceiptTextFormProps> = ({ stores, productId }) => {
   const form = useForm({
+    resolver: zodResolver(AddReceiptTextValidator),
     defaultValues: {
-      store: "sto",
-      receiptTexts: [{ text: "text", store: "store" }],
+      receiptTexts: [{ text: "", store: "" }],
     },
   });
 
@@ -42,83 +52,153 @@ const ReceiptTextForm: FC<ReceiptTextFormProps> = ({ stores }) => {
     control: form.control,
   });
 
-  const onSubmit = () => {
-    console.log("i hate ts");
-  };
+  const { mutate: submitForm, isLoading } = useMutation({
+    mutationFn: async (fields: AddReceiptTextRequest) => {
+      const payload = fields;
+
+      const { data } = await axios.post(
+        `/api/add-receipt-text?id=${productId}`,
+        payload,
+      );
+
+      return data;
+
+      //console.log("payload", payload);
+    },
+    onError: (error: any) => {
+      //TODO use error codes for better handling
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 400) {
+          toast({
+            description: "UPC is required",
+            variant: "destructive",
+          });
+        } else if (error.response?.status === 409) {
+          toast({
+            description: "Product already exists",
+            variant: "destructive",
+          });
+        }
+      } else {
+        toast({
+          description: "Something went wrong",
+          variant: "destructive",
+        });
+      }
+    },
+    onSuccess: () => {
+      toast({
+        description: "Your item has been added!",
+      });
+    },
+  });
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit}>
-        {fields.map((field, index) => (
-          <FormField
-            control={form.control}
-            key={field.id}
-            name={`receiptTexts.${index}`}
-            render={({ field }) => (
-              <FormItem className="grid grid-cols-12 gap-x-4">
-                <FormLabel
-                  className={cn("col-span-full", index !== 0 && "sr-only")}
-                >
-                  Receipt Text
-                </FormLabel>
-                <FormDescription
-                  className={cn("col-span-full", index !== 0 && "sr-only")}
-                >
-                  Enter the text as it appears on the receipt and where
-                  it&apos;s from
-                </FormDescription>
+      <form
+        onSubmit={form.handleSubmit((e) => {
+          submitForm(e);
+        })}
+        className="w-full gap-4 rounded-lg border p-4 px-3 md:px-6"
+      >
+        <div className="col-span-full">
+          {fields.map((field, index) => (
+            <FormField
+              control={form.control}
+              key={field.id}
+              name={`receiptTexts.${index}`}
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-12 gap-x-4">
+                  <FormLabel
+                    className={cn("col-span-full", index !== 0 && "sr-only")}
+                  >
+                    Receipt Text
+                  </FormLabel>
+                  <FormDescription
+                    className={cn("col-span-full", index !== 0 && "sr-only")}
+                  >
+                    Enter the text as it appears on the receipt and where
+                    it&apos;s from
+                  </FormDescription>
 
-                <FormField
-                  control={form.control}
-                  name={`receiptTexts.${index}.text`}
-                  render={({ field }) => (
-                    <FormItem className="col-span-8">
-                      <FormLabel>Text</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Text" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        Text as it appears on the receipt
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="store"
-                  render={({ field }) => (
-                    <FormItem className="col-span-4">
-                      <FormLabel>Store</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+                  <FormField
+                    control={form.control}
+                    name={`receiptTexts.${index}.text`}
+                    render={({ field }) => (
+                      <FormItem className="col-span-7">
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue
-                              className="text-slate-600"
-                              placeholder="Select a store"
-                            />
-                          </SelectTrigger>
+                          <Input
+                            placeholder="the junk on the receipt"
+                            {...field}
+                          />
                         </FormControl>
-                        <SelectContent>
-                          {stores.map((store) => (
-                            <SelectItem key={store.id} value={store.id}>
-                              <p className="capitalize">{store.name}</p>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormDescription>From store</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </FormItem>
-            )}
-          />
-        ))}
+                        <FormDescription>
+                          Text as it appears on the receipt
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`receiptTexts.${index}.store`}
+                    render={({ field }) => (
+                      <FormItem className="col-span-3">
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue
+                                className="text-slate-600"
+                                placeholder="Select a store"
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {stores.map((store) => (
+                              <SelectItem key={store.id} value={store.id}>
+                                <p className="capitalize">{store.name}</p>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormDescription>From store</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="col-span-2 mt-2"
+                    onClick={() => remove(index)}
+                  >
+                    Delete
+                  </Button>
+                </FormItem>
+              )}
+            />
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="mt-2"
+            onClick={() => append({ text: "", store: "" })}
+          >
+            Add another
+          </Button>
+        </div>
+
+        <div className="col-span-full"></div>
+
+        <Button type="submit" className="col-span-full mt-6">
+          Submit
+        </Button>
       </form>
     </Form>
   );
