@@ -82,10 +82,11 @@ export async function POST(req: Request) {
       // (store is from a select component
       // so we know it exists)
       // TODO: need to check location as well
-      const storeId = await db.store.findFirst({
+      /* const storeId = await db.store.findFirst({
         where: { name: store },
-      });
+      }); */
 
+      /*
       // then we create the receiptText entry
       const receiptTextEntry = await db.receiptText.create({
         data: {
@@ -106,8 +107,9 @@ export async function POST(req: Request) {
           },
         },
       });
+      */
 
-      return new Response(updateProduct.type);
+      return new Response(product.type);
     }
   } catch (error) {
     if (error instanceof z.ZodError) {

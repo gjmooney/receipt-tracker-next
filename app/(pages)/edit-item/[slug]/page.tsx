@@ -1,8 +1,6 @@
-import ProductCard from "@/components/ProductCard";
 import ReceiptTextForm from "@/components/forms/ReceiptTextForm";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
-import { Product } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { FC } from "react";
 
@@ -16,7 +14,6 @@ const page: FC<pageProps> = async ({ params }) => {
   const { slug } = params;
   const { userId } = auth();
 
-  // not auth -> redirect to login
   if (!userId) {
     redirect("/sign-in");
   }
@@ -33,7 +30,6 @@ const page: FC<pageProps> = async ({ params }) => {
     <div>
       {product ? (
         <>
-          <ProductCard data={product} />
           <ReceiptTextForm stores={stores} productId={slug} />
         </>
       ) : (

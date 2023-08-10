@@ -4,7 +4,7 @@ import { z } from "zod";
 export const AddReceiptTextValidator = z.object({
   // required fields
   receiptTexts: z.array(
-    z.object({ text: z.string().min(1), store: z.string().min(1) }),
+    z.object({ text: z.string().min(1), storeId: z.string().min(1) }),
   ),
 });
 

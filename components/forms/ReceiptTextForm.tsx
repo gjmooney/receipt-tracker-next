@@ -1,8 +1,18 @@
 "use client";
 
+import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import {
+  AddReceiptTextRequest,
+  AddReceiptTextValidator,
+} from "@/lib/validators/addReceiptTextVal";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ReceiptText, Store } from "@prisma/client";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
 import { FC } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -12,8 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { fi } from "date-fns/locale";
-import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -22,15 +30,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Button } from "../ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  AddReceiptTextRequest,
-  AddReceiptTextValidator,
-} from "@/lib/validators/addReceiptTextVal";
-import axios, { AxiosError } from "axios";
-import { toast } from "@/hooks/use-toast";
-import { useMutation } from "@tanstack/react-query";
 
 interface ReceiptTextFormProps {
   stores: Store[];
@@ -43,7 +42,7 @@ const ReceiptTextForm: FC<ReceiptTextFormProps> = ({ stores, productId }) => {
   const form = useForm({
     resolver: zodResolver(AddReceiptTextValidator),
     defaultValues: {
-      receiptTexts: [{ text: "", store: "" }],
+      receiptTexts: [{ text: "", storeId: "" }],
     },
   });
 
@@ -86,10 +85,18 @@ const ReceiptTextForm: FC<ReceiptTextFormProps> = ({ stores, productId }) => {
         });
       }
     },
-    onSuccess: () => {
-      toast({
-        description: "Your item has been added!",
-      });
+    onSuccess: (data) => {
+      // if we get a 0 back, it was a duplicate
+      if (!data) {
+        toast({
+          description: "Entry already exists!",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          description: `Added ${data} records`,
+        });
+      }
     },
   });
 
@@ -142,7 +149,7 @@ const ReceiptTextForm: FC<ReceiptTextFormProps> = ({ stores, productId }) => {
 
                   <FormField
                     control={form.control}
-                    name={`receiptTexts.${index}.store`}
+                    name={`receiptTexts.${index}.storeId`}
                     render={({ field }) => (
                       <FormItem className="col-span-3">
                         <Select
@@ -188,7 +195,7 @@ const ReceiptTextForm: FC<ReceiptTextFormProps> = ({ stores, productId }) => {
             variant="outline"
             size="sm"
             className="mt-2"
-            onClick={() => append({ text: "", store: "" })}
+            onClick={() => append({ text: "", storeId: "" })}
           >
             Add another
           </Button>
