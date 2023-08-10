@@ -1,5 +1,8 @@
+import ProductCard from "@/components/ProductCard";
+import ReceiptTextForm from "@/components/forms/ReceiptTextForm";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
+import { Product } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { FC } from "react";
 
@@ -9,7 +12,7 @@ interface pageProps {
   };
 }
 
-const page: FC<pageProps> = ({ params }) => {
+const page: FC<pageProps> = async ({ params }) => {
   const { slug } = params;
   const { userId } = auth();
 
@@ -18,13 +21,30 @@ const page: FC<pageProps> = ({ params }) => {
     redirect("/sign-in");
   }
 
-  const product = db.product.findUnique({
+  console.log("slug", slug);
+
+  const product = await db.product.findUnique({
     where: {
       id: slug,
     },
   });
 
-  return <div>page {slug}</div>;
+  const stores = await db.store.findMany();
+
+  console.log("product", product);
+
+  return (
+    <div>
+      {product ? (
+        <>
+          <ProductCard data={product} />
+          <ReceiptTextForm stores={stores} />
+        </>
+      ) : (
+        <div>Product not found</div>
+      )}
+    </div>
+  );
 };
 
 export default page;

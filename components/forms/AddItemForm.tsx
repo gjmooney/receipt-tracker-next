@@ -200,7 +200,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           )}
         />
 
-        <FormField
+        {/*  <FormField
           control={form.control}
           name="receiptText"
           render={({ field }) => (
@@ -244,7 +244,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <div
           className={cn(
