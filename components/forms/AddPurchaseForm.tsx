@@ -34,25 +34,25 @@ interface AddPurchaseFormProps {
   stores: Store[];
   receiptTexts: ReceiptText[];
 }
-type rct = Pick<ReceiptText, "id" | "text">;
+
+type ReceiptTextOptionsType = Pick<ReceiptText, "id" | "text">;
 
 const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
   stores,
   receiptTexts,
 }) => {
   const [selectedStoreId, setSelectedStoreId] = useState("");
-  const [receiptTextOptions, setReceiptTextOptions] = useState<rct[]>([]);
+  const [receiptTextOptions, setReceiptTextOptions] = useState<
+    ReceiptTextOptionsType[]
+  >([]);
 
   useEffect(() => {
     // get all the receipt texts from the selected store
-    console.log("receiptTexts", receiptTexts);
     const filteredReceipts = receiptTexts
       .filter((receipt) => receipt.storeId === selectedStoreId)
       .map(({ text, id }) => {
         return { text, id };
       });
-
-    console.log("selectedStoreId", selectedStoreId);
 
     setReceiptTextOptions(filteredReceipts);
   }, [receiptTexts, selectedStoreId]);
