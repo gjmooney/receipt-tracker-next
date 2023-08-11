@@ -30,6 +30,11 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Checkbox } from "../ui/checkbox";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AddPurchaseRequest,
+  AddPurchaseValidator,
+} from "@/lib/validators/addPurchaseVal";
 
 interface AddPurchaseFormProps {
   stores: Store[];
@@ -61,20 +66,21 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
   //TODO - use location to differentiate stores in chain and
   //TODO resolver, types, and defaults
   const form = useForm({
+    resolver: zodResolver(AddPurchaseValidator),
     defaultValues: {
       store: "",
       date: new Date(),
-      entries: [{ productId: "test", price: 0, onSale: false }],
+      receiptTexts: [{ productId: "test", price: 0, onSale: false }],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
-    name: "entries",
+    name: "receiptTexts",
     control: form.control,
   });
 
   const { mutate: submitForm, isLoading } = useMutation({
-    mutationFn: async (fields: any) => {
+    mutationFn: async (fields: AddPurchaseRequest) => {
       const payload = fields;
       const { data } = await axios.post(`/api/add-purchase`, payload);
 
@@ -199,7 +205,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
             <FormField
               control={form.control}
               key={field.id}
-              name={`entries.${index}`}
+              name={`receiptTexts.${index}`}
               render={({ field }) => (
                 <FormItem className="grid grid-cols-12 gap-x-4">
                   <FormLabel
@@ -231,7 +237,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
 
                   <FormField
                     control={form.control}
-                    name={`entries.${index}.productId`}
+                    name={`receiptTexts.${index}.productId`}
                     render={({ field }) => (
                       <FormItem className="col-span-5">
                         <Select
@@ -260,7 +266,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                   />
                   <FormField
                     control={form.control}
-                    name={`entries.${index}.price`}
+                    name={`receiptTexts.${index}.price`}
                     render={({ field }) => (
                       <FormItem className="col-span-3">
                         <FormControl>
@@ -271,7 +277,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                   />
                   <FormField
                     control={form.control}
-                    name={`entries.${index}.onSale`}
+                    name={`receiptTexts.${index}.onSale`}
                     render={({ field }) => (
                       <FormItem className="col-span-2 flex flex-col rounded-md border p-4">
                         <FormControl>

@@ -77,12 +77,15 @@ model Purchase {
 }
 
 model Price {
-  id        String  @id @default(uuid())
-  price     Int
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  date      DateTime
+  price     Decimal
   onSale    Boolean
-  fromStore Store   @relation(fields: [storeId], references: [id])
+  fromStore Store    @relation(fields: [storeId], references: [id])
   storeId   String
-  Product   Product @relation(fields: [productId], references: [id])
+  Product   Product  @relation(fields: [productId], references: [id])
   productId String
 
   @@index([storeId])

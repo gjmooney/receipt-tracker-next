@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { AddPurchaseValidator } from "@/lib/validators/addPurchaseVal";
 import { AddReceiptTextValidator } from "@/lib/validators/addReceiptTextVal";
 import { auth } from "@clerk/nextjs";
 import { NextRequest } from "next/server";
@@ -14,12 +15,17 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
+    const { date, receiptTexts, store } = AddPurchaseValidator.parse(body);
+
     // add store id to price entries
-    const data = body.entries.map((entry: any) => ({
+    const data = receiptTexts.map((entry) => ({
       ...entry,
-      price: +entry.price,
-      storeId: body.store,
+      //price: +entry.price,
+      storeId: store,
+      date: date,
     }));
+
+    console.log("data", data);
 
     // create prices
     // this automatically connects the new price to existing products
@@ -30,6 +36,7 @@ export async function POST(req: NextRequest) {
     return new Response(`${createMany.count}`, { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.log("error.message", error.message);
       return new Response(error.message, { status: 422 });
     }
 
