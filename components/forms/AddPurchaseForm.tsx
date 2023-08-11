@@ -4,7 +4,7 @@ import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { ReceiptText, Store } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { FC, useEffect, useState } from "react";
@@ -36,7 +36,7 @@ interface AddPurchaseFormProps {
   receiptTexts: ReceiptText[];
 }
 
-type ReceiptTextOptionsType = Pick<ReceiptText, "id" | "text">;
+type ReceiptTextOptionsType = Pick<ReceiptText, "id" | "text" | "productId">;
 
 const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
   stores,
@@ -51,8 +51,8 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
     // get all the receipt texts from the selected store
     const filteredReceipts = receiptTexts
       .filter((receipt) => receipt.storeId === selectedStoreId)
-      .map(({ text, id }) => {
-        return { text, id };
+      .map(({ text, id, productId }) => {
+        return { text, id, productId };
       });
 
     setReceiptTextOptions(filteredReceipts);
@@ -64,7 +64,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
     defaultValues: {
       store: "",
       date: new Date(),
-      entries: [{ name: "test", price: 0, onSale: false }],
+      entries: [{ productId: "test", price: 0, onSale: false }],
     },
   });
 
@@ -75,7 +75,10 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
 
   const { mutate: submitForm, isLoading } = useMutation({
     mutationFn: async (fields: any) => {
-      console.log("fields", fields);
+      const payload = fields;
+      const { data } = await axios.post(`/api/add-purchase`, payload);
+
+      return data;
     },
     onError: (error: any) => {
       //TODO use error codes for better handling
@@ -98,9 +101,9 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
         });
       }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast({
-        description: "Your item has been added!",
+        description: `Created ${data} records`,
       });
     },
   });
@@ -121,9 +124,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
               <FormLabel>Store</FormLabel>
               <Select
                 onValueChange={(value) => {
-                  console.log("value", value);
                   field.onChange(value);
-
                   setSelectedStoreId(value);
                 }}
                 defaultValue={field.value}
@@ -230,7 +231,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
 
                   <FormField
                     control={form.control}
-                    name={`entries.${index}.name`}
+                    name={`entries.${index}.productId`}
                     render={({ field }) => (
                       <FormItem className="col-span-5">
                         <Select
@@ -247,7 +248,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                               <SelectItem
                                 className="capitalize"
                                 key={text.id}
-                                value={text.id}
+                                value={text.productId}
                               >
                                 <span className="capitalize">{text.text}</span>
                               </SelectItem>
@@ -301,7 +302,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
             variant="outline"
             size="sm"
             className="mt-2"
-            onClick={() => append({ name: "", price: 0, onSale: false })}
+            onClick={() => append({ productId: "", price: 0, onSale: false })}
           >
             Add another item
           </Button>

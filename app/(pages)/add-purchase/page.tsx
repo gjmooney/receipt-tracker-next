@@ -5,16 +5,16 @@ import { FC } from "react";
 interface pageProps {}
 
 const page: FC<pageProps> = async ({}) => {
-  const products = await db.product.findMany({
+  /* const products = await db.product.findMany({
     select: {
       type: true,
     },
-  });
+  }); */
 
   const stores = await db.store.findMany();
   const receiptTexts = await db.receiptText.findMany();
 
-  const arr = [...products];
+  //const arr = [...products];
   //console.log("products", arr);
   //console.log("produce", produce);
 
