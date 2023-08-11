@@ -6,8 +6,6 @@ export const AddItemValidator = z.object({
   type: z.string(),
   variety: z.string(),
   isProduce: z.boolean().default(false),
-  receiptText: z.string(),
-  store: z.string(),
 
   // always optional
   category: z.string().optional(),

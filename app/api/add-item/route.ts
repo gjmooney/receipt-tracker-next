@@ -3,6 +3,8 @@ import { AddItemValidator } from "@/lib/validators/addItemForm";
 import { auth } from "@clerk/nextjs";
 import { z } from "zod";
 
+const PRODUCE = -1;
+
 export async function POST(req: Request) {
   try {
     const { userId } = auth();
@@ -13,18 +15,8 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    let {
-      type,
-      variety,
-      isProduce,
-      receiptText,
-      store,
-      category,
-      brand,
-      weight,
-      weightUnit,
-      upc,
-    } = AddItemValidator.parse(body);
+    let { type, variety, isProduce, category, brand, weight, weightUnit, upc } =
+      AddItemValidator.parse(body);
 
     /* return error if there's no UPC/weight/weight unit
      do check here because it's not being enforced at form level
@@ -43,7 +35,7 @@ export async function POST(req: Request) {
 
     // set weight to -1 for produce items (no upc)
     if (!weight) {
-      weight = -1;
+      weight = PRODUCE;
     }
 
     const productExists = await db.product.findUnique({

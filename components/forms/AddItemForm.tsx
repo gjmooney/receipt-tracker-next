@@ -84,8 +84,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
       type: "",
       variety: "",
       isProduce: false,
-      receiptText: "",
-      store: undefined,
+
       category: undefined,
       brand: undefined,
       weight: undefined,
