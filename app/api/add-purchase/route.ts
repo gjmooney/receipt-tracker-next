@@ -14,9 +14,6 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    console.log("body", body);
-    //create purchase????
-
     // add store id to price entries
     const data = body.entries.map((entry: any) => ({
       ...entry,
@@ -25,23 +22,10 @@ export async function POST(req: NextRequest) {
     }));
 
     // create prices
+    // this automatically connects the new price to existing products
     const createMany = await db.price.createMany({
       data,
     });
-
-    // attach price to product
-
-    /* // add product id to receipt texts
-    const data = receiptTextValidated.receiptTexts.map((entry) => ({
-      ...entry,
-      productId: productId,
-    })); */
-
-    /* // create receipt texts
-    const createMany = await db.receiptText.createMany({
-      data,
-      skipDuplicates: true,
-    }); */
 
     return new Response(`${createMany.count}`, { status: 200 });
   } catch (error) {
