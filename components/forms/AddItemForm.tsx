@@ -80,17 +80,6 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
   //TODO think i do want a subvariety as well
   const form = useForm<AddItemRequest>({
     resolver: zodResolver(AddItemValidator),
-    defaultValues: {
-      type: "",
-      variety: "",
-      isProduce: false,
-
-      category: undefined,
-      brand: undefined,
-      weight: undefined,
-      weightUnit: "UNIT",
-      upc: "",
-    },
   });
 
   const { mutate: submitForm, isLoading } = useMutation({

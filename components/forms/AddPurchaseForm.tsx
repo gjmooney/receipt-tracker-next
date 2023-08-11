@@ -65,12 +65,10 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
 
   //TODO - use location to differentiate stores in chain and
   //TODO resolver, types, and defaults
-  const form = useForm({
+  const form = useForm<AddPurchaseRequest>({
     resolver: zodResolver(AddPurchaseValidator),
     defaultValues: {
-      store: "",
-      date: new Date(),
-      receiptTexts: [{ productId: "test", price: 0, onSale: false }],
+      receiptTexts: [{ productId: "", price: 0, onSale: false }],
     },
   });
 
@@ -261,6 +259,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                             ))}
                           </SelectContent>
                         </Select>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -272,6 +271,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                         <FormControl>
                           <Input placeholder="price" {...field} />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -298,7 +298,6 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                   >
                     Delete
                   </Button>
-                  <FormMessage />
                 </FormItem>
               )}
             />
