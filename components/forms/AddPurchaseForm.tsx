@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Checkbox } from "../ui/checkbox";
 
 interface AddPurchaseFormProps {
   stores: Store[];
@@ -63,7 +64,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
     defaultValues: {
       store: "",
       date: new Date(),
-      entries: [{ name: "test", price: 0 }],
+      entries: [{ name: "test", price: 0, onSale: false }],
     },
   });
 
@@ -211,6 +212,22 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                     Add the items you bought on this purchase.
                   </FormDescription>
 
+                  <FormLabel
+                    className={cn("col-span-5", index !== 0 && "sr-only")}
+                  >
+                    Receipt Text
+                  </FormLabel>
+                  <FormLabel
+                    className={cn("col-span-3", index !== 0 && "sr-only")}
+                  >
+                    Price
+                  </FormLabel>
+                  <FormLabel
+                    className={cn("col-span-2", index !== 0 && "sr-only")}
+                  >
+                    On Sale?
+                  </FormLabel>
+
                   <FormField
                     control={form.control}
                     name={`entries.${index}.name`}
@@ -240,19 +257,31 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={form.control}
                     name={`entries.${index}.price`}
                     render={({ field }) => (
-                      <FormItem className="col-span-5">
+                      <FormItem className="col-span-3">
                         <FormControl>
                           <Input placeholder="price" {...field} />
                         </FormControl>
                       </FormItem>
                     )}
                   />
-
+                  <FormField
+                    control={form.control}
+                    name={`entries.${index}.onSale`}
+                    render={({ field }) => (
+                      <FormItem className="col-span-2 flex flex-col rounded-md border p-4">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
                   <Button
                     type="button"
                     variant="destructive"
@@ -272,7 +301,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
             variant="outline"
             size="sm"
             className="mt-2"
-            onClick={() => append({ name: "", price: 0 })}
+            onClick={() => append({ name: "", price: 0, onSale: false })}
           >
             Add another item
           </Button>
