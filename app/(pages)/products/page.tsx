@@ -9,7 +9,7 @@ interface pageProps {}
 
 const page: FC<pageProps> = async ({}) => {
   const products = await db.product.findMany({});
-  console.log("products", products);
+  //console.log("products", products);
   //TODO pagination and scrolling
 
   return (

@@ -10,7 +10,7 @@ const ProductList: FC<ProductListProps> = async ({ products }) => {
   return (
     <div className="flex flex-col gap-4 md:grid md:grid-cols-12">
       {products.map((product) => (
-        <ProductCard key={product.id} data={product} />
+        <ProductCard key={product.id} product={product} />
       ))}
     </div>
   );
