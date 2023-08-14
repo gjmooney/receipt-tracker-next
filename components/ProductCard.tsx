@@ -57,27 +57,21 @@ const ProductCard: FC<ProductCardProps> = async ({ product }) => {
         <div className="col-span-full items-center rounded-md border border-slate-700 p-4">
           <p className="font-semibold">Lowest Price:</p>
           {priceInfo ? (
-            <>
-              <span className="font-semibold">
-                ${priceInfo?.price.toString()}{" "}
-              </span>
-              <span className="text-muted-foreground">from </span>
-              <span className="inline-block font-semibold capitalize">
+            <div className="mt-2 text-sm font-semibold">
+              ${priceInfo?.price.toString()}
+              <span className="font-normal text-muted-foreground"> from </span>
+              <span className="inline-block capitalize">
                 {/** link to store detail */}
                 {priceInfo?.fromStore.name}
+                <span className="font-normal text-muted-foreground">
+                  -{priceInfo.fromStore.location}{" "}
+                </span>
               </span>
-
-              <span className=" text-muted-foreground">
-                -{priceInfo.fromStore.location}{" "}
-              </span>
-
-              <span className="text-muted-foreground">on </span>
-              <span className="font-semibold">
-                {format(priceInfo.date, "d MMM yyyy")}
-              </span>
-            </>
+              <span className="font-normal text-muted-foreground"> on </span>
+              {format(priceInfo.date, "d MMM yyyy")}
+            </div>
           ) : (
-            <span>No purchases yet</span>
+            <div className="mt-2">No purchases yet</div>
           )}
         </div>
 
