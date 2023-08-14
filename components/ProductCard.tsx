@@ -54,19 +54,24 @@ const ProductCard: FC<ProductCardProps> = async ({ product }) => {
         </CardDescription>
       </CardHeader>
       <CardContent className="gap-4">
-        <div className=" col-span-full items-center space-x-4 rounded-md border border-slate-700 p-4">
+        <div className="col-span-full items-center rounded-md border border-slate-700 p-4">
           <p className="font-semibold">Lowest Price:</p>
           {priceInfo ? (
             <>
               <span className="font-semibold">
-                ${priceInfo?.price.toString()}
+                ${priceInfo?.price.toString()}{" "}
               </span>
-              <span className="text-muted-foreground">from</span>
+              <span className="text-muted-foreground">from </span>
               <span className="inline-block font-semibold capitalize">
                 {/** link to store detail */}
                 {priceInfo?.fromStore.name}
               </span>
-              <span className="text-muted-foreground">on</span>
+
+              <span className=" text-muted-foreground">
+                -{priceInfo.fromStore.location}{" "}
+              </span>
+
+              <span className="text-muted-foreground">on </span>
               <span className="font-semibold">
                 {format(priceInfo.date, "d MMM yyyy")}
               </span>
