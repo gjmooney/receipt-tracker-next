@@ -67,8 +67,10 @@ const ProductCard: FC<ProductCardProps> = async ({ product }) => {
                   -{priceInfo.fromStore.location}{" "}
                 </span>
               </span>
-              <span className="font-normal text-muted-foreground"> on </span>
-              {format(priceInfo.date, "d MMM yyyy")}
+              <span className="text-sm">
+                <span className="font-normal text-muted-foreground"> on </span>
+                {format(priceInfo.date, "d MMM yyyy")}
+              </span>
             </div>
           ) : (
             <div className="mt-2">No purchases yet</div>
