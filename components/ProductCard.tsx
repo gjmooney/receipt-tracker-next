@@ -1,4 +1,4 @@
-import { Product } from "@prisma/client";
+import { Price, Product } from "@prisma/client";
 import { format, formatDistance } from "date-fns";
 import { FC } from "react";
 import { Button, buttonVariants } from "./ui/button";
@@ -14,11 +14,11 @@ import { cn } from "@/lib/utils";
 import { db } from "@/lib/db";
 
 interface ProductCardProps {
-  product: Product;
+  product: Product & { _count: { Price: number } };
 }
 
 const ProductCard: FC<ProductCardProps> = async ({ product }) => {
-  //console.log("product", product);
+  //console.log("product", product._count.Price);
 
   const priceInfo = await db.price.findFirst({
     where: {
@@ -57,7 +57,7 @@ const ProductCard: FC<ProductCardProps> = async ({ product }) => {
         <div className="col-span-full items-center rounded-md border border-slate-700 p-4">
           <p className="font-semibold">Lowest Price:</p>
           {priceInfo ? (
-            <div className="mt-2 text-sm font-semibold">
+            <div className="mt-2 font-semibold">
               ${priceInfo?.price.toString()}
               <span className="font-normal text-muted-foreground"> from </span>
               <span className="inline-block capitalize">
@@ -79,7 +79,7 @@ const ProductCard: FC<ProductCardProps> = async ({ product }) => {
           <div className="grid grid-cols-[12px_1fr] items-start justify-center capitalize text-muted-foreground">
             <span className="flex h-2 w-2 translate-y-1.5 rounded-full bg-cyan-700 " />
             {/** TODO add times purchased to schema */}
-            Purchased 10 times
+            Purchased {product._count.Price} times
           </div>
 
           <div className="hidden basis-1/3 space-y-1 md:block">

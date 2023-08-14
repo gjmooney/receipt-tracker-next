@@ -8,7 +8,16 @@ import { FC } from "react";
 interface pageProps {}
 
 const page: FC<pageProps> = async ({}) => {
-  const products = await db.product.findMany({});
+  const products = await db.product.findMany({
+    include: {
+      _count: {
+        select: {
+          Price: true,
+        },
+      },
+    },
+  });
+
   //console.log("products", products);
   //TODO pagination and scrolling
 
