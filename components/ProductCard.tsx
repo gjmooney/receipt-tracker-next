@@ -58,7 +58,11 @@ const ProductCard: FC<ProductCardProps> = async ({ product }) => {
           <p className="font-semibold">Lowest Price:</p>
           {priceInfo ? (
             <div className="mt-2 font-semibold">
-              ${priceInfo?.price.toString()}
+              {/** undefined uses system locale */}
+              {new Intl.NumberFormat(undefined, {
+                style: "currency",
+                currency: "EUR",
+              }).format(priceInfo.price / 100)}
               <span className="font-normal text-muted-foreground"> from </span>
               <span className="inline-block capitalize">
                 {/** link to store detail */}

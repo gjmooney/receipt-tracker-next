@@ -17,10 +17,11 @@ export async function POST(req: NextRequest) {
 
     const { date, receiptTexts, store } = AddPurchaseValidator.parse(body);
 
-    // add store id to price entries
+    // add store id and date to price entries
+    // convert entered prices to cents for db
     const data = receiptTexts.map((entry) => ({
       ...entry,
-      //price: +entry.price,
+      price: entry.price * 100,
       storeId: store,
       date: date,
     }));
