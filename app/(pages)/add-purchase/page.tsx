@@ -12,7 +12,9 @@ const page: FC<pageProps> = async ({}) => {
   }); */
 
   const stores = await db.store.findMany();
-  const receiptTexts = await db.receiptText.findMany();
+  const receiptTexts = await db.receiptText.findMany({
+    orderBy: { text: "asc" },
+  });
 
   //const arr = [...products];
   //console.log("products", arr);
