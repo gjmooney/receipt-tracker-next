@@ -81,7 +81,7 @@ model Price {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   date      DateTime
-  price     Decimal
+  price     Int
   onSale    Boolean
   fromStore Store    @relation(fields: [storeId], references: [id])
   storeId   String
