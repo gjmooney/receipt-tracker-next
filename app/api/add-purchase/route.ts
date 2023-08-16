@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
     });
 
     return new Response(`${createMany.count}`, { status: 200 });
+
+    // return new Response(`10`, { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.log("error.message", error.message);

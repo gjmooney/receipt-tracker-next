@@ -2,6 +2,11 @@
 
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import {
+  AddPurchaseRequest,
+  AddPurchaseValidator,
+} from "@/lib/validators/addPurchaseVal";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ReceiptText, Store } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -11,6 +16,7 @@ import { FC, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
+import { Checkbox } from "../ui/checkbox";
 import {
   Form,
   FormControl,
@@ -29,12 +35,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Checkbox } from "../ui/checkbox";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  AddPurchaseRequest,
-  AddPurchaseValidator,
-} from "@/lib/validators/addPurchaseVal";
 
 interface AddPurchaseFormProps {
   stores: Store[];
@@ -68,7 +68,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
   const form = useForm<AddPurchaseRequest>({
     resolver: zodResolver(AddPurchaseValidator),
     defaultValues: {
-      receiptTexts: [{ productId: "", price: 0, onSale: false }],
+      receiptTexts: [{ productId: undefined, price: undefined, onSale: false }],
     },
   });
 
@@ -144,7 +144,12 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                 <SelectContent>
                   {stores.map((store) => (
                     <SelectItem key={store.id} value={store.id}>
-                      <p className="capitalize">{store.name}</p>
+                      <p className="capitalize">
+                        {store.name}
+                        <span className="text-muted-foreground">
+                          -{store.location}
+                        </span>
+                      </p>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -203,7 +208,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
             <FormField
               control={form.control}
               key={field.id}
-              name={`receiptTexts.${index}`}
+              name={`receiptTexts.${index}` as const}
               render={({ field }) => (
                 <FormItem className="grid grid-cols-12 gap-x-4">
                   <FormLabel
@@ -235,7 +240,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
 
                   <FormField
                     control={form.control}
-                    name={`receiptTexts.${index}.productId`}
+                    name={`receiptTexts.${index}.productId` as const}
                     render={({ field }) => (
                       <FormItem className="col-span-5">
                         <Select
@@ -265,11 +270,17 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                   />
                   <FormField
                     control={form.control}
-                    name={`receiptTexts.${index}.price`}
+                    name={`receiptTexts.${index}.price` as const}
                     render={({ field }) => (
                       <FormItem className="col-span-3">
                         <FormControl>
-                          <Input placeholder="price" {...field} />
+                          <div className="relative grid gap-1">
+                            <div className="absolute left-0 top-0 grid h-10 w-8 place-items-center">
+                              <span className="text-sm text-zinc-400">€</span>
+                            </div>
+
+                            <Input className="pl-6" placeholder="" {...field} />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -307,7 +318,13 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
             variant="outline"
             size="sm"
             className="mt-2"
-            onClick={() => append({ productId: "", price: 0, onSale: false })}
+            onClick={() =>
+              append({
+                productId: "",
+                price: 0,
+                onSale: false,
+              })
+            }
           >
             Add another item
           </Button>
