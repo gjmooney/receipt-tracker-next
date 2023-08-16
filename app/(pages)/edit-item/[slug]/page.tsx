@@ -29,9 +29,13 @@ const page: FC<pageProps> = async ({ params }) => {
   return (
     <div>
       {product ? (
-        <>
+        <div>
+          <p className="mb-6 text-center text-4xl  font-semibold capitalize tracking-tight">
+            {product.variety} {product.type}
+          </p>
+
           <ReceiptTextForm stores={stores} productId={slug} />
-        </>
+        </div>
       ) : (
         <div>Product not found</div>
       )}
