@@ -7,7 +7,7 @@ import { AddItemRequest, AddItemValidator } from "@/lib/validators/addItemForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { FC } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -76,11 +76,30 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     { label: "l", value: "L" },
   ];
 
-  //TODO reset after submit
+  const defaultValues = useMemo(() => {
+    return {
+      type: "",
+      variety: "",
+      isProduce: false,
+      category: "",
+      brand: "",
+      weight: undefined,
+      weightUnit: undefined,
+      upc: "",
+    };
+  }, []);
+
   //TODO think i do want a subvariety as well
   const form = useForm<AddItemRequest>({
     resolver: zodResolver(AddItemValidator),
+    defaultValues: defaultValues,
   });
+
+  useEffect(() => {
+    if (form.formState.isSubmitSuccessful) {
+      form.reset(defaultValues);
+    }
+  }, [defaultValues, form]);
 
   const { mutate: submitForm, isLoading } = useMutation({
     mutationFn: async (fields: AddItemRequest) => {
@@ -91,6 +110,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
       }
 
       const { data } = await axios.post(`/api/add-item`, payload);
+
       return data;
       /* if (form.getValues("isProduce")) {
         payload.weight = 1;
@@ -188,52 +208,6 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           )}
         />
 
-        {/*  <FormField
-          control={form.control}
-          name="receiptText"
-          render={({ field }) => (
-            <FormItem className="col-span-8">
-              <FormLabel>Receipt Text</FormLabel>
-              <FormControl>
-                <Input placeholder="Receipt text?" {...field} />
-              </FormControl>
-              <FormDescription>
-                The item as it appears on your receipt
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="store"
-          render={({ field }) => (
-            <FormItem className="col-span-4">
-              <FormLabel>Store</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue
-                      className="text-slate-600"
-                      placeholder="Select a store"
-                    />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {stores.map((store) => (
-                    <SelectItem key={store.value} value={store.value}>
-                      {store.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>From store</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
-
         <div
           className={cn(
             form.getValues("isProduce")
@@ -278,7 +252,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
               <FormItem className="col-span-6 ">
                 <FormLabel>Weight</FormLabel>
                 <FormControl>
-                  <Input placeholder="the weight?" {...field} />
+                  <Input {...field} placeholder="the weight?" />
                 </FormControl>
                 <FormDescription>how much you get</FormDescription>
                 <FormMessage />
@@ -340,7 +314,11 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
           />
         </div>
 
-        <Button type="submit" className="col-span-full mt-6">
+        <Button
+          disabled={isLoading}
+          type="submit"
+          className="col-span-full mt-6"
+        >
           Submit
         </Button>
       </form>
