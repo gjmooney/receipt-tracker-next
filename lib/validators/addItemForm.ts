@@ -14,7 +14,7 @@ export const AddItemValidator = z.object({
   // required for not produce
   weight: z.coerce.number().positive().optional(),
   weightUnit: z.enum(["G", "KG", "ML", "CL", "L", "UNIT"]).optional(),
-  upc: z.string().length(13).optional(),
+  upc: z.string().optional(),
 
   // might keep might delete
   description: z.string().max(150).optional(),
