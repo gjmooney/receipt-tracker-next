@@ -31,7 +31,6 @@ const findPricePerThousand = (
   }
   const pricePerUnit = price / 100 / weight;
 
-  console.log("weightUnit", weightUnit);
   switch (weightUnit) {
     case "KG" || "L":
       return price / 100;
@@ -66,11 +65,16 @@ const ProductCard: FC<ProductCardProps> = async ({ product }) => {
     },
   });
 
-  const pricePerKilo = findPricePerThousand(
-    priceInfo!.price,
-    product.weight,
-    product.weightUnit!,
-  );
+  // TODO: leaning towards having priceperkilo be in the db instead of calc'd here
+  let pricePerKilo = 0;
+
+  if (priceInfo) {
+    pricePerKilo = findPricePerThousand(
+      priceInfo.price,
+      product.weight,
+      product.weightUnit!,
+    );
+  }
 
   return (
     <Card className="flex flex-col justify-evenly bg-slate-100 text-slate-700 md:col-span-6 ">
