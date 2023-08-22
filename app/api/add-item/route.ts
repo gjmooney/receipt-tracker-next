@@ -67,47 +67,12 @@ export async function POST(req: Request) {
         },
       });
 
-      //TODO maybe need error handling for these other db calls
-      // should separate them out
-
-      // then we get the store id
-      // (store is from a select component
-      // so we know it exists)
-      // TODO: need to check location as well
-      /* const storeId = await db.store.findFirst({
-        where: { name: store },
-      }); */
-
-      /*
-      // then we create the receiptText entry
-      const receiptTextEntry = await db.receiptText.create({
-        data: {
-          text: receiptText,
-          storeId: storeId!.id,
-          productId: product.id,
-        },
-      });
-
-      //then we update the product item with the receipt text
-      const updateProduct = await db.product.update({
-        where: { id: product.id },
-        data: {
-          receiptText: {
-            connect: {
-              id: receiptTextEntry.id,
-            },
-          },
-        },
-      });
-      */
-
       return new Response(product.type);
     }
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });
     }
-
     return new Response("is Broke", { status: 500 });
   }
 }
