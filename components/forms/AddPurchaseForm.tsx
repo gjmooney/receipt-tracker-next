@@ -332,7 +332,11 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
 
         <div className="col-span-full"></div>
 
-        <Button type="submit" className="col-span-full mt-6">
+        <Button
+          disabled={isLoading}
+          type="submit"
+          className="col-span-full mt-6"
+        >
           Submit
         </Button>
       </form>
