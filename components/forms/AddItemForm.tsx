@@ -85,7 +85,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
       brand: "",
       weight: undefined,
       weightUnit: undefined,
-      upc: "",
+      upc: undefined,
     };
   }, []);
 
@@ -99,7 +99,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
     if (form.formState.isSubmitSuccessful) {
       form.reset(defaultValues);
     }
-  }, [defaultValues, form]);
+  }, [form.formState.isSubmitSuccessful, form.reset]);
 
   const { mutate: submitForm, isLoading } = useMutation({
     mutationFn: async (fields: AddItemRequest) => {
