@@ -17,7 +17,7 @@ const page: FC<pageProps> = async ({}) => {
       },
     },
     orderBy: {
-      createdAt: "desc",
+      updatedAt: "desc",
     },
   });
 
