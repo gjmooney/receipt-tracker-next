@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ReceiptText, Store } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import {
@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { redirect } from "next/navigation";
 
 interface ReceiptTextFormProps {
   stores: Store[];
@@ -50,6 +51,12 @@ const ReceiptTextForm: FC<ReceiptTextFormProps> = ({ stores, productId }) => {
     name: "receiptTexts",
     control: form.control,
   });
+
+  useEffect(() => {
+    if (form.formState.isSubmitSuccessful) {
+      redirect("/products");
+    }
+  }, [form.formState.isSubmitSuccessful]);
 
   const { mutate: submitForm, isLoading } = useMutation({
     mutationFn: async (fields: AddReceiptTextRequest) => {
