@@ -21,7 +21,7 @@ const StoreCard: FC<StoreCardProps> = ({ store }) => {
 
   //TODO make click goto google maps?
   return (
-    <Card className="flex flex-col justify-evenly bg-slate-100 text-slate-700 md:col-span-6 ">
+    <Card className="flex flex-col justify-evenly bg-slate-100  dark:bg-slate-800 md:col-span-6 ">
       <CardHeader>
         <CardTitle className="capitalize">{store.name}</CardTitle>
       </CardHeader>

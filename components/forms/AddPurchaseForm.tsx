@@ -135,10 +135,7 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue
-                      className="text-slate-600"
-                      placeholder="Select a store"
-                    />
+                    <SelectValue placeholder="Select a store" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -276,7 +273,9 @@ const AddPurchaseForm: FC<AddPurchaseFormProps> = ({
                         <FormControl>
                           <div className="relative grid gap-1">
                             <div className="absolute left-0 top-0 grid h-10 w-8 place-items-center">
-                              <span className="text-sm text-zinc-400">€</span>
+                              <span className="text-sm text-muted-foreground">
+                                €
+                              </span>
                             </div>
 
                             <Input className="pl-6" placeholder="" {...field} />

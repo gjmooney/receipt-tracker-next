@@ -272,10 +272,7 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue
-                        className="text-slate-600"
-                        placeholder="Select a unit of weight"
-                      />
+                      <SelectValue placeholder="Select a unit of weight" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>

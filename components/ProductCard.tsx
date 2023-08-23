@@ -77,7 +77,7 @@ const ProductCard: FC<ProductCardProps> = async ({ product }) => {
   }
 
   return (
-    <Card className="flex flex-col justify-evenly bg-slate-100 text-slate-700 md:col-span-6 ">
+    <Card className="flex flex-col justify-evenly bg-slate-100  dark:bg-slate-800 md:col-span-6 ">
       <CardHeader className="w-fit">
         <CardTitle className="capitalize">
           {product.variety} {product.type}

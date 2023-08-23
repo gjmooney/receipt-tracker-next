@@ -1,11 +1,12 @@
 import Navbar from "@/components/Navbar";
-import Providers from "@/components/Providers";
+
+import QueryProvider from "@/components/providers/QueryProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
-import { QueryClient } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,15 +23,17 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={inter.className}>
-        <Providers>
+        <QueryProvider>
           <body className="min-h-screen pt-12 antialiased  ">
-            <Navbar />
-            <div className="container mx-auto h-full max-w-7xl pt-12">
-              {children}
-            </div>
-            <Toaster />
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <Navbar />
+              <div className="container mx-auto h-full max-w-7xl pt-12">
+                {children}
+              </div>
+              <Toaster />
+            </ThemeProvider>
           </body>
-        </Providers>
+        </QueryProvider>
       </html>
     </ClerkProvider>
   );

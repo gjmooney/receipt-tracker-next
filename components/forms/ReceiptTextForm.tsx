@@ -165,10 +165,7 @@ const ReceiptTextForm: FC<ReceiptTextFormProps> = ({ stores, productId }) => {
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue
-                                className="text-slate-600"
-                                placeholder="Select a store"
-                              />
+                              <SelectValue placeholder="Select a store" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
