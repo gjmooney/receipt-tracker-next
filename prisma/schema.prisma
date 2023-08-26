@@ -44,7 +44,7 @@ model Product {
   Purchase    Purchase[]
   receiptText ReceiptText[]
 
-  @@unique([variety, type, weight])
+  @@unique([variety, type, weight, brand])
 }
 
 model ReceiptText {

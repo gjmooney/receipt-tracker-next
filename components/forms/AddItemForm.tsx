@@ -85,11 +85,10 @@ const AddItemForm: FC<AddItemFormProps> = ({}) => {
       brand: "",
       weight: undefined,
       weightUnit: undefined,
-      upc: undefined,
+      upc: "",
     };
   }, []);
 
-  //TODO think i do want a subvariety as well
   const form = useForm<AddItemRequest>({
     resolver: zodResolver(AddItemValidator),
     defaultValues: defaultValues,
